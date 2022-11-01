@@ -92,9 +92,11 @@
   .input-group {
     border-radius: var(--border-radius);
     display: flex;
-    box-shadow: 0 0 7.5vw 5vh #e6ebee;
-    margin: 4rem auto;
+    margin: 2rem auto;
+    margin-top: 10rem;
+    margin-bottom: 0rem;
     max-width: 80vw;
+    background-color: white;
   }
   
   .input-group .input {
