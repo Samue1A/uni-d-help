@@ -73,32 +73,43 @@ a {
     background-color: black;
     padding: 0.35rem;
     display: grid;
-    grid-template-rows: repeat(2, 50%);
-    grid-template-columns: repeat(1, 100%);
-    justify-content: space-evenly;
+    grid-template-columns: repeat(2, 50%);
+    grid-template-rows: repeat(1, 100%);
 }
 
 .foots {
     color: white;
-    padding: 0.2rem;
-    font-size: 120%;
+    padding: 2vw;
+    margin: 0;
+    font-size: 2vw;
     text-align: center;
 }
 
 
 
-@media screen and (min-width: 800px) {
+@media screen and (max-width: 800px) {
     .footer {
         background-color: black;
         display: grid;
-        grid-template-columns: repeat(2, 50%);
-        grid-template-rows: repeat(1, 100%);
-        justify-content: space-evenly;
+        grid-template-rows: repeat(2, 50%);
+        grid-template-columns: repeat(1, 100%);
+        height: auto;
+    }
+    #btnn {
+        border-radius: 1rem;
+        width: 12vw;
+        padding: 1vw;
+        margin: 1vw;
+        float: right;
+        font-size: 150%;
     }
     .foots {
-        padding-top: 4vh;
+       font-size: 5vw;
+       padding: 1vw;
+    }
+    .footer_1 {
+        padding-top: 1vh;
         padding-bottom: 4vh;
-        font-size: 130%;
     }
 }
 
@@ -106,13 +117,17 @@ a {
 .footer_1 {
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 3vw;
+    height: auto;
 }
 
 .footer_2 {
     background-color: white;
     color: white;
-    width: 100%;
     float: left;
+    position: relative;
 }
 .footer_2 .footer_input {
     border: 0;
@@ -132,7 +147,7 @@ a {
 }
 .footer_input::placeholder {
     color: #cdcbd7;
-    font-size: 80%;
+    font-size: 2vw;
     padding: auto;
   }
 textarea {
@@ -141,7 +156,16 @@ textarea {
     outline: 0;
 }
 
+#file {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}
+
 #btnn {
+    position: absolute;
+    bottom: 0;
+    right: 0;
     color: white;
     background-color: #0d6efd;
     outline: 0;
@@ -150,6 +174,10 @@ textarea {
     width: 12vw;
     padding: 1vw;
     margin: 1vw;
-    float: right;
-    font-size: 150%;
+    font-size: 2vw;
+}
+
+textarea {
+    width: 90%;
+    height: 45%;
 }
