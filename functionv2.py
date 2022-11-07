@@ -1,5 +1,3 @@
-from __future__ import absolute_import
-from __future__ import division, print_function, unicode_literals
 import string
 import requests
 import bs4
@@ -53,20 +51,6 @@ def GetText(link, look_at):
     for sentence in summarizer(parser.document, SENTENCES_COUNT):
         final += str(sentence)
     return final, look_at, url
-
-def tag_visible(element):
-    if element.parent.name in ['style', 'script', 'head', 'title', 'meta', '[document]']:
-        return False
-    if isinstance(element, Comment):
-        return False
-    return True
-
-
-def text_from_html(body):
-    soup = bs4.BeautifulSoup(body, 'html.parser')
-    texts = soup.findAll(text=True)
-    visible_texts = filter(tag_visible, texts)  
-    return u" ".join(t.strip() for t in visible_texts)
 
 
 def DoForEach(university):
