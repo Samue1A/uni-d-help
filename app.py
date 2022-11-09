@@ -76,7 +76,7 @@ app = Flask(__name__)
 def index():
    return render_template("index.html")
 
-@app.route('/murder')
+@app.route('/search')
 def greet():
     name = request.args.get("name")
     uni = name.capitalize()
