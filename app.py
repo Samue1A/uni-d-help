@@ -52,7 +52,7 @@ def GetText(link, look_at):
     for sentence in summarizer(parser.document, SENTENCES_COUNT):
         final += str(sentence)
     return final, look_at, url
- 
+
 
 def DoForEach(university):
     list = ['needed grades', 'application', 'cost']
@@ -90,7 +90,6 @@ def greet():
         headers.append(item[1].replace("+", " ").capitalize())
 
         text.append(item[0])
-        print(item[0])
         links.append(item[2])
 
     headers.append("Majors")
