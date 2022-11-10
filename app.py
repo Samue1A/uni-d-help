@@ -50,9 +50,9 @@ def GetText(link, look_at):
     summarizer.stop_words = get_stop_words(LANGUAGE)
     final = ''
     for sentence in summarizer(parser.document, SENTENCES_COUNT):
-        final += str(sentence)
+        final += '\n' + str(sentence)
     return final, look_at, url
-
+ 
 
 def DoForEach(university):
     list = ['needed grades', 'application', 'cost']
@@ -76,7 +76,7 @@ app = Flask(__name__)
 def index():
    return render_template("index.html")
 
-@app.route('/search')
+@app.route('/murder')
 def greet():
     name = request.args.get("name")
     uni = name.capitalize()
@@ -90,6 +90,7 @@ def greet():
         headers.append(item[1].replace("+", " ").capitalize())
 
         text.append(item[0])
+        print(item[0])
         links.append(item[2])
 
     headers.append("Majors")
