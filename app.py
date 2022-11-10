@@ -76,7 +76,7 @@ app = Flask(__name__)
 def index():
    return render_template("index.html")
 
-@app.route('/murder')
+@app.route('/search')
 def greet():
     name = request.args.get("name")
     uni = name.capitalize()
@@ -97,5 +97,6 @@ def greet():
 
 
     headers.append("Sources")
-    text.append('\n'.join(links))
+    text.append(links)
+    print(text[4])
     return render_template('greet.html', text=text, headers=headers)

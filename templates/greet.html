@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="greet.css">
+    <link rel="stylesheet" href="../static/greet.css">
     <title>Document</title>
 </head>
 <body>
@@ -17,6 +17,8 @@
     <h2>{{ headers[3] }}</h2>
     <p>{{text[3]}}</p>
     <h2>{{ headers[4] }}</h2>
-    <p>{{text[4]}}</p>
+    {% for item in text[4] %}
+      <a href=item><p>{{ item }}</p></a>
+    {% endfor %}
 </body>
 </html>
