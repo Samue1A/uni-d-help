@@ -50,7 +50,7 @@ def GetText(link, look_at):
     summarizer.stop_words = get_stop_words(LANGUAGE)
     final = ''
     for sentence in summarizer(parser.document, SENTENCES_COUNT):
-        final += '\n' + str(sentence)
+        final += str(sentence)
     return final, look_at, url
  
 
