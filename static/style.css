@@ -136,6 +136,9 @@ h2 {
     .text {
         padding-top: 3.5vh;
         margin: 0;
+        text-decoration: none;
+        color: black;
+        font-size: 200%;
     }
 
     .boux {
