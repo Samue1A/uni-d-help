@@ -9,13 +9,19 @@
 </head>
 <body>
     <h2>{{ headers[0] }}</h2>
-    <p>{{text[0]}}</p>
+    {% for item in text[0] %}
+        <p> - {{ item }}</p>
+    {% endfor %}
     <h2>{{ headers[1] }}</h2>
-    <p>{{text[1]}}</p>
+    {% for item in text[1] %}
+        <p> - {{ item }}</p>
+    {% endfor %}
     <h2>{{ headers[2] }}</h2>
-    <p>{{text[2]}}</p>
+    {% for item in text[2] %}
+        <p> - {{ item }}</p>
+    {% endfor %}
     <h2>{{ headers[3] }}</h2>
-    <p>{{text[3]}}</p>
+    <p>Here is a link with a list of possible majors: <a href="{{text[3]}}">{{text[3]}}</a></p>
     <h2>{{ headers[4] }}</h2>
     {% for item in text[4] %}
       <a href={{item}}><p>{{ item }}</p></a>

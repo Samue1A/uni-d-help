@@ -15,7 +15,6 @@ import nltk
 nltk.download('punkt')
 
 LANGUAGE = "english"
-SENTENCES_COUNT = 10
 
 def ReturnFirstURLs(university, item):
     URLs = []
@@ -38,7 +37,7 @@ def filterLink(links):
                 #we should change the filter if it is about british unis i think they got .ac.uk
                 return item
 
-def GetText(link, look_at):
+def GetText(link, look_at, SENTENCES_COUNT):
     url = link
     parser = HtmlParser.from_url(url, Tokenizer(LANGUAGE))
     # or for plain text files
@@ -48,21 +47,20 @@ def GetText(link, look_at):
 
     summarizer = Summarizer(stemmer)
     summarizer.stop_words = get_stop_words(LANGUAGE)
-    final = ''
+    final = []
     for sentence in summarizer(parser.document, SENTENCES_COUNT):
-        final += str(sentence)
+        final.append(sentence)
     return final, look_at, url
 
 
-def DoForEach(university):
-    list = ['needed grades', 'application', 'cost']
+def DoForEach(university, SENTENCES_COUNT, list=['needed grades', 'application', 'cost']):
     #major should be replaced by courses if it is a british uni
     #acceptance rate doesn't work, for ssome reason it is the link just after but we should learn how to take the number from the center of the web page
     returnn = []
     for item in list:
         if ' ' in item:
             item = '+'.join(item.split(' '))
-        returnn.append(GetText(filterLink(ReturnFirstURLs(university, item)), item))
+        returnn.append(GetText(filterLink(ReturnFirstURLs(university, item)), item, SENTENCES_COUNT))
     return returnn
 
 #-----------------------------------------------------------------------------------------------------------------------
@@ -72,16 +70,35 @@ app = Flask(__name__)
  
 # A decorator used to tell the application
 # which URL is associated function
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def index():
-   return render_template("index.html")
+    return render_template("index.html")
 
 @app.route('/search')
 def greet():
     name = request.args.get("name")
+    listy = request.args.getlist("listy")
+    SENTENCES_COUNT = request.args.get("lines")
+
+    major = False
+    sources = False
+    if not SENTENCES_COUNT:
+        SENTENCES_COUNT = 10
+    if 'major' in listy:
+        major = True
+        listy.remove('major')
+    if 'sources' in listy:
+        sources = True
+        listy.remove('sources')
+
     uni = name.capitalize()
-    all_text = list(DoForEach(uni))
-    majors = 'Here is a link with a list of possible majors: \n'+ filterLink(ReturnFirstURLs(uni, 'major'))
+
+    all_text = list(DoForEach(uni, SENTENCES_COUNT, listy))
+    for bob in all_text:
+        for bobb in bob:
+            print(bobb)
+    if major:
+        majors = filterLink(ReturnFirstURLs(uni, 'major'))
 
     links = []
     headers = []
@@ -90,13 +107,18 @@ def greet():
         headers.append(item[1].replace("+", " ").capitalize())
 
         text.append(item[0])
-        links.append(item[2])
+        links.append(item[-1])
 
-    headers.append("Majors")
-    text.append(majors)
+    
+    if major:
+        headers.append("Majors")
+        text.append(majors)
 
+    if sources:
+        headers.append("Sources")
+        text.append(links)
 
-    headers.append("Sources")
-    text.append(links)
-    print(text[4])
+    print(text[-1])
+    print('\n\n\n' + str(SENTENCES_COUNT))
+    print(listy)
     return render_template('greet.html', text=text, headers=headers)
