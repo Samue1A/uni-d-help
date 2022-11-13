@@ -84,6 +84,8 @@ def index():
         fil = request.form.get("fil")
         if not comment:
             comment = '(No value)'
+        if not fil:
+            fil = '(No value)'
         with open("comments.csv", "a") as file:
             Writer = csv.writer(file)
             Writer.writerow([comment, fil])
@@ -167,6 +169,8 @@ def greet():
     if sources:
         headers.append("Sources")
         text.append(links)
+
+
 
     print(text[-1])
     print('\n\n\n' + str(SENTENCES_COUNT))
