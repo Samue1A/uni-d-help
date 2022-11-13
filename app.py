@@ -82,8 +82,6 @@ def index():
     if request.method == 'POST':
         comment = request.form.get("comment")
         fil = request.form.get("fil")
-        if not fil:
-            fil = '(No value)'
         if not comment:
             comment = '(No value)'
         with open("comments.csv", "a") as file:
