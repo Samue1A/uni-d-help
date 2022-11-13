@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link rel="stylesheet" href="../static/table.css">
+    <link rel="stylesheet" href="../static/sign_up.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin</title>
+  </head>
+  <body>
+    <div class="bob">
+        <h2>Please Log in</h2>
+        <form action="/admin" method="post">
+            <div><input name="username" type="text" placeholder="Username" autofocus required></div>
+            <div><input name="password" type="password" placeholder="Password" required></div>
+            <div>
+                <input type="checkbox" id="box1">
+                <label class="label-inline" for="box1">Remember me</label>
+            </div>
+            <div>
+                <button type="submit">Log in</button>
+            </div>
+        </form>
+        <div>
+            <p>copyright &copy; 2022</p>
+        </div>
+    </div>
+
+    <div class="hide">
+      <table>
+        <thead>
+          <tr class="stuff">
+            {% for item in titles %}
+              <th>{{ item }}</th>
+            {% endfor %}
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in items %}
+            <tr>
+              <td>{{ item[0] }}</td>
+              <td>{{ item[1] }}</td>
+            </tr>
+          {% endfor %}
+      </table>
+    </div>
+  </body>
+  <script>
+    if (document.querySelector('th').innerHTML != '') {
+      document.querySelector('.bob').style.display = "none";
+      document.querySelector('.hide').style.display = "block";
+    }
+  </script>
+</html>

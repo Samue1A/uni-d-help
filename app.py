@@ -3,7 +3,7 @@ import string
 import requests
 import bs4
 from bs4.element import Comment
-
+import csv
 
 from sumy.parsers.html import HtmlParser
 from sumy.parsers.plaintext import PlaintextParser
@@ -66,13 +66,56 @@ def DoForEach(university, SENTENCES_COUNT, list=['needed grades', 'application',
 #-----------------------------------------------------------------------------------------------------------------------
  
 # Flask constructor
-app = Flask(__name__)  
+app = Flask(__name__)
+
+commments = [
+    ["comment", "file"]
+]
  
 # A decorator used to tell the application
 # which URL is associated function
 @app.route('/', methods=['GET', 'POST'])
 def index():
+    global commments
+    if request.method == 'POST':
+        comment = request.form.get("comment")
+        fil = request.form.get("fil")
+        if not fil:
+            fil = '(No value)'
+        if not comment:
+            fil = 'No value'
+        commments.append([comment, fil])
+        print(commments)
     return render_template("index.html")
+
+
+
+
+
+
+@app.route('/admin', methods=['GET', 'POST'])
+def admin():
+    print(commments)
+    if request.method == 'POST':
+        print(1)
+        username = request.form.get("username")
+        password = request.form.get("password")
+        for item in commments:
+            print(item)
+        if (username == 'samuel' and password == 'password') or (username == 'oskar' and password == 'password'):
+            print(2)
+            titles = commments[0]
+            items = commments.copy()
+            items.pop(0)
+            print(titles)
+            print(items)
+            return render_template('admin.html', titles=titles, items=items)
+    return render_template('admin.html')
+
+
+
+
+
 
 @app.route('/search')
 def greet():
