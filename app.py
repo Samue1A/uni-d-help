@@ -104,7 +104,7 @@ def admin():
         x = 0
         username = request.form.get("username")
         password = request.form.get("password")
-        if (username == 'samuel' and password == 'password') or (username == 'oskar' and password == 'password'):
+        if (username == 'samuel' and password == 'verycomplexpassword') or (username == 'oskar' and password == 'password'):
             with open("comments.csv", "r") as file:
                 reader = csv.reader(file)
                 for row in reader:
