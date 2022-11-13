@@ -14,6 +14,9 @@ from sumy.utils import get_stop_words
 import nltk
 nltk.download('punkt')
 
+
+
+
 LANGUAGE = "english"
 
 def ReturnFirstURLs(university, item):
@@ -76,7 +79,6 @@ commments = [
 # which URL is associated function
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    global commments
     if request.method == 'POST':
         comment = request.form.get("comment")
         fil = request.form.get("fil")
@@ -84,8 +86,9 @@ def index():
             fil = '(No value)'
         if not comment:
             fil = 'No value'
-        commments.append([comment, fil])
-        print(commments)
+        with open("comments.csv", "a") as file:
+            Writer = csv.writer(file)
+            Writer.writerow([comment, fil])
     return render_template("index.html")
 
 
@@ -95,21 +98,29 @@ def index():
 
 @app.route('/admin', methods=['GET', 'POST'])
 def admin():
-    print(commments)
     if request.method == 'POST':
         print(1)
+        items = []
+        titles = []
+        x = 0
         username = request.form.get("username")
         password = request.form.get("password")
-        for item in commments:
-            print(item)
         if (username == 'samuel' and password == 'password') or (username == 'oskar' and password == 'password'):
             print(2)
-            titles = commments[0]
-            items = commments.copy()
-            items.pop(0)
-            print(titles)
+            with open("comments.csv", "r") as file:
+                reader = csv.reader(file)
+                for row in reader:
+                    print(row)
+                    if x == 0:
+                        titles = row.copy()
+                    else:
+                        print(1)
+                        if row != []:
+                            print(2)
+                            items.append(row)
+                    x += 1
             print(items)
-            return render_template('admin.html', titles=titles, items=items)
+            return render_template('admin.html', items=items, titles=titles)
     return render_template('admin.html')
 
 
