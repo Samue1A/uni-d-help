@@ -85,7 +85,7 @@ def index():
         if not fil:
             fil = '(No value)'
         if not comment:
-            fil = 'No value'
+            comment = '(No value)'
         with open("comments.csv", "a") as file:
             Writer = csv.writer(file)
             Writer.writerow([comment, fil])
@@ -99,14 +99,12 @@ def index():
 @app.route('/admin', methods=['GET', 'POST'])
 def admin():
     if request.method == 'POST':
-        print(1)
         items = []
         titles = []
         x = 0
         username = request.form.get("username")
         password = request.form.get("password")
         if (username == 'samuel' and password == 'password') or (username == 'oskar' and password == 'password'):
-            print(2)
             with open("comments.csv", "r") as file:
                 reader = csv.reader(file)
                 for row in reader:
