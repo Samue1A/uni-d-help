@@ -86,8 +86,7 @@ def GetText(link, look_at, SENTENCES_COUNT, country, university):
     if look_at == 'needed+grades' and country == 'US':
         a = ScrapGoogle(university, '+university+average+gpa').split('All results')[-1]
         a = a.split('. ')[0].strip()
-        a = a + '.'
-        final.append(a)
+        final.append(str(a))
         print(1)
     for sentence in summarizer(parser.document, SENTENCES_COUNT):
         final.append(sentence)
