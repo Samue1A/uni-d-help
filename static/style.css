@@ -62,7 +62,7 @@
 }
 
 .boux:hover {
-    background-color: grey;
+    box-shadow: 2.5vw 2.5vw blue;
 }
 
 .normal {
@@ -198,7 +198,7 @@ h2 {
     box-shadow: 0 0 2px 2px  #b9d3fa;
 }
 
-#btn {
+.btns {
     color: white;
     background-color: #0d6efd;
     outline: 0;
@@ -211,4 +211,20 @@ h2 {
     margin-bottom: 3vw;
     position: absolute;
     bottom: 0;
+}
+
+#uk {
+    display: none;
+}
+
+#blue {
+    background-color: royalblue;
+}
+
+.backblack {
+    background-color: black;
+    outline: 0;
+    border: 0;
+    text-decoration: none;
+    color: white;
 }

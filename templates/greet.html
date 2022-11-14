@@ -21,10 +21,20 @@
         <p> - {{ item }}</p>
     {% endfor %}
     <h2>{{ headers[3] }}</h2>
-    <p>Here is a link with a list of possible majors: <a href="{{text[3]}}">{{text[3]}}</a></p>
-    <h2>{{ headers[4] }}</h2>
-    {% for item in text[4] %}
-      <a href={{item}}><p>{{ item }}</p></a>
-    {% endfor %}
+    {% if country == 'UK' %}
+        <p>Here is a link with a list of possible courses: <a href="{{text[3]}}">{{text[3]}}</a></p>
+        <h2>{{ headers[4] }}</h2>
+        {% for item in text[4] %}
+          <a href={{item}}><p>{{ item }}</p></a>
+        {% endfor %}
+    {% else %}
+        <p>Here is a link with a list of possible majors: <a href="{{text[3]}}">{{text[3]}}</a></p>
+        <h2>{{ headers[4] }}</h2>
+        <p class="bold">{{ text[4] }}</p>
+        <h2>{{ headers[-1] }}</h2>
+        {% for i in text[-1] %}
+          <a href={{i}}><p>{{ i }}</p></a>
+        {% endfor %}
+    {% endif %}
 </body>
 </html>
