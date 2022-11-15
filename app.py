@@ -285,7 +285,7 @@ def greet():
 
 
     if location:
-        z = ScrapGoogle(uni, '+university+location').split('All results')[-1].split('- Wikipedia')[0].split(',').pop()
+        z = ScrapGoogle(uni, '+university+location').split('All results')[-1].split('- Wikipedia')[0]
         headers.append("Location")
         text.append(z) 
     if sources:
