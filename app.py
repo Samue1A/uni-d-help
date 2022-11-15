@@ -283,8 +283,11 @@ def greet():
         headers.append("Acceptance Rate")
         text.append(a)
 
-    if location:
+    if acceptance_rate:
         z = ScrapGoogle(uni, '+university+acceptance+rate').split('All results')[-1].split('- Wikipedia')[0].split(',').pop()
+        text.append(z) 
+    if location:
+        z = ScrapGoogle(uni, '+university+location').split('All results')[-1].split('- Wikipedia')[0].split(',').pop()
         text.append(z) 
     if sources:
         headers.append("Sources")
