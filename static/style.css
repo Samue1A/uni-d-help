@@ -63,9 +63,14 @@
     transition: box-shadow 0.5s;
     
 }
+@keyframes shadow {
+  100% {box-shadow: 2.5vw 2.5vw blue;}
+}
 
 .boux:hover {
-    box-shadow: 2.5vw 2.5vw blue;
+  animation-name: shadow;
+  animation-duration: 0.5s;
+  transition-timing-function: ease-in;
 }
 
 .normal {
