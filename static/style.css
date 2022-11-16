@@ -64,7 +64,12 @@
     
 }
 @keyframes shadow {
-  100% {box-shadow: 2vw 2vw blue;}
+    0% {
+        box-shadow: 0vw 0vw blue;
+    }
+    100% {
+        box-shadow: 2vw 2vw blue;
+    }
 }
 
 .boux:hover {
