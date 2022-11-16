@@ -68,7 +68,7 @@
         box-shadow: 0vw 0vw blue;
     }
     100% {
-        box-shadow: 2vw 2vw blue;
+        box-shadow: 1.9vw 1.9vw blue;
     }
 }
 
@@ -76,7 +76,7 @@
   animation-name: shadow;
   animation-duration: 0.5s;
   transition-timing-function: ease-in;
-  box-shadow: 2vw 2vw blue;
+  box-shadow: 1.9vw 1.9vw blue;
 }
 
 .normal {
