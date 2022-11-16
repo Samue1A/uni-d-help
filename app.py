@@ -4,6 +4,7 @@ import requests
 import bs4
 from bs4.element import Comment
 import csv
+import config
 
 from sumy.parsers.html import HtmlParser
 from sumy.parsers.plaintext import PlaintextParser
@@ -15,8 +16,81 @@ import nltk
 nltk.download('punkt')
 
 
+
+def PyYelp(location):
+    url = 'https://api.yelp.com/v3/businesses/search'
+    headers = {
+        "Authorization": "Bearer " + config.api_key
+    }
+
+    final = {
+        'coffee shop': None,
+        'Pizzeria': None,
+        'Library': None
+    }
+    for i in final:
+        add = []
+        params = {
+            "term": i,
+            "location": f"{location}"
+        }
+        response = requests.get(url, headers=headers, params=params)
+        try:
+            businesses = response.json()["businesses"]
+        except KeyError:
+            final[i] = "nothing found"
+
+        rating = (sorted(businesses, key=lambda item: (item["rating"], (item["distance"]*-1))))
+        #learn how to sort by distance!
+        if len(rating) > 2:
+            n1 = {
+                'name': rating[-1]["name"],
+                'location': (rating[-1]['location'])["address1"],
+                'rating': rating[-1]["rating"],
+                'phone': rating[-1]["phone"]
+            }
+            n2 = {
+                'name': rating[-2]["name"],
+                'location': (rating[-2]['location'])["address1"],
+                'rating': rating[-2]["rating"],
+                'phone': rating[-2]["phone"]
+            }
+            add.append(n1)
+            add.append(n2)
+        
+        final[i] = add.copy()
+    print(final)
+    return final
+
+
+
+
+def GetText(link, look_at, SENTENCES_COUNT, country, university):
+    url = link.split('%')[0]
+    parser = HtmlParser.from_url(url, Tokenizer(LANGUAGE))
+    # or for plain text files
+    # parser = PlaintextParser.from_file("document.txt", Tokenizer(LANGUAGE))
+    # parser = PlaintextParser.from_string("Check this out.", Tokenizer(LANGUAGE))
+    stemmer = Stemmer(LANGUAGE)
+
+    summarizer = Summarizer(stemmer)
+    summarizer.stop_words = get_stop_words(LANGUAGE)
+    final = []
+    print(0)
+    print(f"look at: {look_at} country: {country}")
+    if look_at == 'needed+grades' and country == 'US':
+        a = ScrapGoogle(university, '+university+average+gpa').split('All results')[-1]
+        a = a.split('. ')[0].strip() + '.'
+        final.append(str(a))
+        print(1)
+    for sentence in summarizer(parser.document, SENTENCES_COUNT):
+        final.append(sentence)
+    final = list(dict.fromkeys(final))
+    
+
+    return final, look_at, url
+
 def ScrapGoogle(university, message):
-    URLs = []
     url = 'https://www.google.com/search?q=' + university + message
     print('looked up ' + url)
     headers = {"User-Agent": "Mozilla/5.0"}
@@ -69,31 +143,6 @@ def filterLinkUK(links):
             if '.ac.uk' in item and not 'default/files/styles/' in item:
                 #we should change the filter if it is about british unis i think they got .ac.uk
                 return item
-
-def GetText(link, look_at, SENTENCES_COUNT, country, university):
-    url = link
-    parser = HtmlParser.from_url(url, Tokenizer(LANGUAGE))
-    # or for plain text files
-    # parser = PlaintextParser.from_file("document.txt", Tokenizer(LANGUAGE))
-    # parser = PlaintextParser.from_string("Check this out.", Tokenizer(LANGUAGE))
-    stemmer = Stemmer(LANGUAGE)
-
-    summarizer = Summarizer(stemmer)
-    summarizer.stop_words = get_stop_words(LANGUAGE)
-    final = []
-    print(0)
-    print(f"look at: {look_at}               country: {country}")
-    if look_at == 'needed+grades' and country == 'US':
-        a = ScrapGoogle(university, '+university+average+gpa').split('All results')[-1]
-        a = a.split('. ')[0].strip() + '.'
-        final.append(str(a))
-        print(1)
-    for sentence in summarizer(parser.document, SENTENCES_COUNT):
-        final.append(sentence)
-    final = list(dict.fromkeys(final))
-    
-
-    return final, look_at, url
 
 
 def DoForEach(university, SENTENCES_COUNT, list=['needed grades', 'application', 'cost'], country='US'):
@@ -148,15 +197,23 @@ def uksearch():
     if 'major' in listy:
         major = True
         listy.remove('major')
+    else:
+        major = False
     if 'sources' in listy:
         sources = True
         listy.remove('sources')
+    else:
+        sources = False
     if 'location' in listy:
         location = True
         listy.remove('location')
+    else:
+        location = False
     if 'acceptance rate' in listy:
         acceptance_rate = True
         listy.remove('acceptance rate')
+    else:
+        acceptance_rate = False
 
     
     
@@ -178,7 +235,13 @@ def uksearch():
 
         text.append(item[0])
         links.append(item[-1])
-
+    
+    if acceptance_rate:
+        a = ScrapGoogle(uni, '+university+acceptance+rate').split('All results')[-1]
+        a = a.split('%')[0]
+        a = a.strip() + '%'
+        headers.append("Acceptance Rate")
+        text.append(a)
     
     if major:
         headers.append("Subjects")
@@ -244,15 +307,23 @@ def greet():
     if 'major' in listy:
         major = True
         listy.remove('major')
+    else:
+        major = False
     if 'sources' in listy:
         sources = True
         listy.remove('sources')
+    else:
+        sources = False
     if 'location' in listy:
         location = True
         listy.remove('location')
+    else:
+        location = False
     if 'acceptance rate' in listy:
         acceptance_rate = True
         listy.remove('acceptance rate')
+    else:
+        acceptance_rate = False
 
     uni = name.capitalize()
 
@@ -286,8 +357,10 @@ def greet():
 
     if location:
         z = ScrapGoogle(uni, '+university+location').split('All results')[-1].split('- Wikipedia')[0]
+        y = ScrapGoogle(uni, '+university+location').split('All results')[-1].split('- Wikipedia')[0]
+        x = [z, PyYelp(z)]
         headers.append("Location")
-        text.append(z) 
+        text.append(x)
     if sources:
         headers.append("Sources")
         text.append(links)

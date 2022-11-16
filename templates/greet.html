@@ -8,36 +8,48 @@
     <title>Document</title>
 </head>
 <body>
-    <h2>{{ headers[0] }}</h2>
-    {% for item in text[0] %}
-        <p> - {{ item }}</p>
+    {% for index in range(0, headers | length)%}
+        {% if index+1 == headers | length %}
+            <h2>{{ headers[-1] }}</h2>
+            {% for i in text[-1] %}
+                <a href={{i}}><p>{{ i }}</p></a>
+            {% endfor %}
+        {% elif headers[index] == 'Subjects' or headers[index] == 'Majors'  %}
+            <h2>{{ headers[index] }}</h2>
+            {% if country == 'UK' %}
+                <p>Here is a link with a list of possible courses: <a href="{{text[index]}}">{{text[index]}}</a></p>
+            {% else %}
+                <p>Here is a link with a list of possible majors: <a href="{{text[3]}}">{{text[3]}}</a></p>
+            {% endif %}
+        {% elif headers[index] == 'Acceptance Rate'%}
+            <h2>{{ headers[index] }}</h2>
+            <p>    {{ text[index] }}</p>
+        {% elif headers[index] == 'Location'%}
+            <h2>{{ headers[index] }}</h2>
+            <p>    {{ text[index][0] }}</p>
+            {%for place in text[index][-1]%}
+                <h3>{{place}}</h3>
+                {%for item in text[index][-1][place]%}
+                    {% if item == "nothing found"%}
+                        <p>{{item}}</p>
+                    {%else%}
+                        {%for key in item%}
+                            <p class="location_info">{{key}}: {{item[key]}}</p>
+                        {%endfor%}
+                        <p><br></p>
+                    {%endif%}
+                {%endfor%}
+            {%endfor%}
+        {% else %}
+            <h2>{{headers[index]}}</h2>
+            {% for item in text[index] %}
+                <p> - {{ item }}</p>
+            {% endfor %}
+        {%endif%}
     {% endfor %}
-    <h2>{{ headers[1] }}</h2>
-    {% for item in text[1] %}
-        <p> - {{ item }}</p>
-    {% endfor %}
-    <h2>{{ headers[2] }}</h2>
-    {% for item in text[2] %}
-        <p> - {{ item }}</p>
-    {% endfor %}
-    <h2>{{ headers[3] }}</h2>
-    {% if country == 'UK' %}
-        <p>Here is a link with a list of possible courses: <a href="{{text[3]}}">{{text[3]}}</a></p>
-        <h2>{{ headers[4] }}</h2>
-        {% for item in text[4] %}
-          <a href={{item}}><p>{{ item }}</p></a>
-        {% endfor %}
-    {% else %}
-        <p>Here is a link with a list of possible majors: <a href="{{text[3]}}">{{text[3]}}</a></p>
-        <h2>{{ headers[4] }}</h2>
-        <p class="bold">{{ text[4] }}</p>
-        <h2>{{ headers[5] }}</h2>
-        <p class="bold">{{ text[5] }}</p>
-        <h2>{{ headers[-1] }}</h2>
-        {% for i in text[-1] %}
-          <a href={{i}}><p>{{ i }}</p></a>
-        {% endfor %}
-    {% endif %}
+
+
+
 </body>
 <script>
     console.log(text[0])

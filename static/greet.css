@@ -15,3 +15,17 @@ p {
 .bold {
     font-weight: bold;
 }
+
+
+h3 {
+    margin-block-start: 2em;
+    padding-left: 3rem;
+}
+
+.location_info {
+    padding: 0;
+    padding-left: 4rem;
+    margin-block-start: 3em;
+    margin-top: 0;
+    margin-bottom: 0;
+}
