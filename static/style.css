@@ -45,6 +45,7 @@
 }
 
 .boux {
+    z-index: 1;
     width: 22vw;
     height: 22vw;
     display: flex;
@@ -59,6 +60,7 @@
     float: center;
     background-position: center;
     background-size: cover;
+    transition: box-shadow 0.5s;
 }
 
 .boux:hover {
