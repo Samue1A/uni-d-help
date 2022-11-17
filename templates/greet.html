@@ -21,11 +21,11 @@
                 <p>Here is a link with a list of possible majors: <a href="{{text[3]}}">{{text[3]}}</a></p>
             {% endif %}
         {% elif headers[index] == 'Acceptance Rate'%}
-            <p>    {{ text[index] }}</p>
+            <p>    {{ text[index].replace((uni + ' University /'), '') }}</p>
         {% elif headers[index] == 'Deadline'%}
             <p>    {{ text[index] }}</p>
         {% elif headers[index] == 'Location'%}
-            <p>    {{ text[index][0] }}</p>
+            <p>    {{ text[index][0].replace((uni + ' University /'), '') }}</p>
             {%for place in text[index][-1]%}
                 <h3>{{place}}</h3>
                 {%for item in text[index][-1][place]%}
