@@ -63,7 +63,7 @@
     transition: box-shadow 0.5s;
     
 }
-@keyframes shadow {
+@keyframes shadowblue {
     0% {
         box-shadow: 0vw 0vw blue;
     }
@@ -72,8 +72,26 @@
     }
 }
 
-.boux:hover {
-  animation-name: shadow;
+@keyframes shadowgreen {
+    0% {
+        box-shadow: 0vw 0vw green;
+    }
+    100% {
+        box-shadow: 1.9vw 1.9vw green;
+    }
+}
+
+
+
+#cambridge:hover {
+    animation-name: shadowgreen;
+    animation-duration: 0.5s;
+    transition-timing-function: ease-in;
+    box-shadow: 1.9vw 1.9vw green;
+  }
+
+#imperial:hover {
+  animation-name: shadowblue;
   animation-duration: 0.5s;
   transition-timing-function: ease-in;
   box-shadow: 1.9vw 1.9vw blue;

@@ -79,7 +79,9 @@ def GetText(link, look_at, SENTENCES_COUNT, country, university):
     print(0)
     print(f"look at: {look_at} country: {country}")
     if look_at == 'needed+grades' and country == 'US':
-        a = ScrapGoogle(university, '+university+average+gpa').split('All results')[-1]
+        a = ScrapGoogle(university, '+university+average+gpa')
+        print(a)
+        a = a.split('All results')[-1]
         a = a.split('. ')[0].strip() + '.'
         final.append(str(a))
         print(1)
@@ -105,7 +107,7 @@ def ScrapGoogle(university, message):
 
 
 def tag_visible(element):
-    if not element.parent.name in ['div']:
+    if not element.parent.name in ['div', 'span', 'b']:
         return False
     if isinstance(element, Comment):
         return False
@@ -157,6 +159,73 @@ def DoForEach(university, SENTENCES_COUNT, list=['needed grades', 'application',
         else:
             returnn.append(GetText(filterLink(ReturnFirstURLs(university, item)), item, SENTENCES_COUNT, country, university))
     return returnn
+
+
+
+
+
+
+
+def check(text):
+    months = ['january', 'jebruary', 'jarch', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december']
+    for sentence in text:
+        for month in months:
+            if month in sentence.lower():
+                return sentence
+    return 'no date'
+
+
+def adFilter(text):
+    if 'Ad' in text:
+        return text.split('.')[-1]
+    return text
+
+
+
+def ScrapGoogle2(university, message):
+    url = 'https://www.google.com/search?q=' + university + message
+    print(url)
+    headers = {"User-Agent": "Mozilla/5.0"}
+    cookies = {"CONSENT": "YES+cb.20210720-07-p0.en+FX+410"}
+    request_result = requests.get(url, headers=headers, cookies=cookies)
+    soup = bs4.BeautifulSoup(request_result.text, "html.parser")
+    texts = soup.findAll(text=True)
+    visible_texts = filter(tag_visible2, texts)  
+    return u" ".join(t.strip() for t in visible_texts)
+
+def tag_visible2(element):
+    if element.parent.name in ['style', 'script', 'head', 'title', 'meta', '[document]']:
+        return False
+    if isinstance(element, Comment):
+        return False
+    return True
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 #-----------------------------------------------------------------------------------------------------------------------
  
@@ -354,6 +423,19 @@ def greet():
         headers.append("Acceptance Rate")
         text.append(a)
 
+    try:
+        deadline = ScrapGoogle2(uni, '+university+application+deadline+date').split('\n\n')[1]
+        deadline = adFilter(check(deadline.replace('. ', ' .').replace('?', ' .').replace('›', ' .').replace('...', ' .').split(' .')).strip()).replace('\n', ' ') 
+    except:
+        deadline = ScrapGoogle2(uni, '+university+application+deadline+date').split('Verbatim')[1]
+        deadline = adFilter(check(deadline.replace('. ', ' .').replace('?', ' .').replace('›', ' .').replace('...', ' .').split(' .')).strip()).replace('\n', ' ') 
+
+
+    if deadline[-1] != '.':
+        deadline += '.'
+
+    headers.append('Deadline')
+    text.append(deadline)
 
     if location:
         z = ScrapGoogle(uni, '+university+location').split('All results')[-1].split('- Wikipedia')[0]
@@ -364,6 +446,10 @@ def greet():
     if sources:
         headers.append("Sources")
         text.append(links)
+    
+
+
+
     
 
 

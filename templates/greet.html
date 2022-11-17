@@ -24,6 +24,9 @@
         {% elif headers[index] == 'Acceptance Rate'%}
             <h2>{{ headers[index] }}</h2>
             <p>    {{ text[index] }}</p>
+        {% elif headers[index] == 'Deadline'%}
+            <h2>{{ headers[index] }}</h2>
+            <p>    {{ text[index] }}</p>
         {% elif headers[index] == 'Location'%}
             <h2>{{ headers[index] }}</h2>
             <p>    {{ text[index][0] }}</p>
