@@ -450,11 +450,6 @@ def greet():
 
 
 
-    
-
-
-
-
     print(text[-1])
     print(len(text))
     print('\n\n\n' + str(SENTENCES_COUNT))
