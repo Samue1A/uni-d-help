@@ -9,26 +9,22 @@
 </head>
 <body>
     {% for index in range(0, headers | length)%}
+        <h2>{{ headers[index] }}</h2>
         {% if index+1 == headers | length %}
-            <h2>{{ headers[-1] }}</h2>
-            {% for i in text[-1] %}
+            {% for i in text[index] %}
                 <a href={{i}}><p>{{ i }}</p></a>
             {% endfor %}
         {% elif headers[index] == 'Subjects' or headers[index] == 'Majors'  %}
-            <h2>{{ headers[index] }}</h2>
             {% if country == 'UK' %}
                 <p>Here is a link with a list of possible courses: <a href="{{text[index]}}">{{text[index]}}</a></p>
             {% else %}
                 <p>Here is a link with a list of possible majors: <a href="{{text[3]}}">{{text[3]}}</a></p>
             {% endif %}
         {% elif headers[index] == 'Acceptance Rate'%}
-            <h2>{{ headers[index] }}</h2>
             <p>    {{ text[index] }}</p>
         {% elif headers[index] == 'Deadline'%}
-            <h2>{{ headers[index] }}</h2>
             <p>    {{ text[index] }}</p>
         {% elif headers[index] == 'Location'%}
-            <h2>{{ headers[index] }}</h2>
             <p>    {{ text[index][0] }}</p>
             {%for place in text[index][-1]%}
                 <h3>{{place}}</h3>
@@ -44,9 +40,10 @@
                 {%endfor%}
             {%endfor%}
         {% else %}
-            <h2>{{headers[index]}}</h2>
             {% for item in text[index] %}
-                <p> - {{ item }}</p>
+                {% if item | string != 'Story 1 Story 2 Story 3 Story 4 Story 5'%}
+                    <p> - {{ item }}</p>
+                {%endif%}
             {% endfor %}
         {%endif%}
     {% endfor %}
