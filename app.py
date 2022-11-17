@@ -325,7 +325,7 @@ def uksearch():
     print(text[-1])
     print('\n\n\n' + str(SENTENCES_COUNT))
     print(listy)
-    return render_template('greet.html', text=text, headers=headers, country='UK')
+    return render_template('greet.html', text=text, headers=headers, country='UK', uni=uni)
 
 
 
@@ -459,4 +459,4 @@ def greet():
     print(len(text))
     print('\n\n\n' + str(SENTENCES_COUNT))
     print(listy)
-    return render_template('greet.html', text=text, headers=headers, country='US')
+    return render_template('greet.html', text=text, headers=headers, country='US', uni=uni)
