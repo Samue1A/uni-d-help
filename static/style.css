@@ -114,7 +114,7 @@
     }
 
     75% {
-        background-image: url(imgs/grads-2.avif);
+        background-image: url(imgs/vadim-sherbakov-d6ebY-faOO0-unsplash.jpg);
     }
 
     100% {
@@ -181,6 +181,56 @@ h2 {
     }
     h2 {
         font-size: 5vw;
+    }
+    @keyframes shadowblue {
+        0% {
+            box-shadow: 0vw 0vw blue;
+        }
+        100% {
+            box-shadow: 2.5vw 2.5vw blue;
+        }
+    }
+    
+    @keyframes shadowgreen {
+        0% {
+            box-shadow: 0vw 0vw green;
+        }
+        100% {
+            box-shadow: 2.5vw 2.5vw green;
+        }
+    }
+    #cambridge:hover {
+        animation-name: shadowgreen;
+        animation-duration: 0.5s;
+        transition-timing-function: ease-in;
+        box-shadow: 2.5vw 2.5vw green;
+      }
+    
+    #imperial:hover {
+      animation-name: shadowblue;
+      animation-duration: 0.5s;
+      transition-timing-function: ease-in;
+      box-shadow: 2.5vw 2.5vw blue;
+    }
+    @keyframes back {
+        0% {
+            background-image: url(imgs/naassom-azevedo-Q_Sei-TqSlc-unsplash.jpg);
+        }
+        25% {
+            background-image: url(imgs/brooke-cagle--uHVRvDr7pg-unsplash.jpg);
+        }
+    
+        50% {
+            background-image: url(imgs/grads-2.avif);
+        }
+    
+        75% {
+            background-image: url(imgs/vasily-koloda-8CqDvPuo_kI-unsplash.jpg);
+        }
+    
+        100% {
+            background-image: url(imgs/naassom-azevedo-Q_Sei-TqSlc-unsplash.jpg);
+        }
     }
 }
 
