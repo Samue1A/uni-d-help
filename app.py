@@ -41,18 +41,22 @@ def PyYelp(location):
             final[i] = "nothing found"
 
         rating = (sorted(businesses, key=lambda item: (item["rating"], (item["distance"]*-1))))
-        print(rating)
         #learn how to sort by distance!
         if len(rating) > 2:
-            for i in range(2):
-                placez = {
-                    'name': rating[-1*((i) + 1)]["name"],
-                    'location': ((rating[-1*((i) + 1)])["location"])["address1"],
-                    'rating': rating[-1*((i) + 1)]["rating"],
-                    'phone': rating[-1*((i) + 1)]["phone"]
-                }
-
-                add.append(placez.copy())
+            n1 = {
+                'name': rating[-1]["name"],
+                'location': (rating[-1]['location'])["address1"],
+                'rating': rating[-1]["rating"],
+                'phone': rating[-1]["phone"]
+            }
+            n2 = {
+                'name': rating[-2]["name"],
+                'location': (rating[-2]['location'])["address1"],
+                'rating': rating[-2]["rating"],
+                'phone': rating[-2]["phone"]
+            }
+            add.append(n1)
+            add.append(n2)
         
         final[i] = add.copy()
     print(final)
