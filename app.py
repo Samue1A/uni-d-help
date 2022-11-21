@@ -96,7 +96,7 @@ def GetText(link, look_at, SENTENCES_COUNT, country, university):
         a = (a.split('. ')[0].strip() + '.').split(' ')
         for index, item in enumerate(a):
             if isfloat(item.strip(".")) or isint(item.strip(".")):
-                a[index] += f' (or {float(item)*5}/20 in france)'
+                a[index] += f' (or {float(item.strip("."))*5}/20 in france)'
                 print('---------------------' + str(a))
                 print('---------------------' + str(a[index]))
                 a = ' '.join(a)      
