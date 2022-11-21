@@ -63,7 +63,19 @@ def PyYelp(location):
     return final
 
 
+def isfloat(num):
+    try:
+        float(num)
+        return True
+    except ValueError:
+        return False
 
+def isint(num):
+    try:
+        int(num)
+        return True
+    except ValueError:
+        return False
 
 def GetText(link, look_at, SENTENCES_COUNT, country, university):
     url = link.split('%')[0]
@@ -80,17 +92,24 @@ def GetText(link, look_at, SENTENCES_COUNT, country, university):
     print(f"look at: {look_at} country: {country}")
     if look_at == 'needed+grades' and country == 'US':
         a = ScrapGoogle(university, '+university+average+gpa')
-        print(a)
         a = a.split('All results')[-1]
-        a = a.split('. ')[0].strip() + '.'
-        final.append(str(a))
-        print(1)
+        a = (a.split('. ')[0].strip() + '.').split(' ')
+        for index, item in enumerate(a):
+            if isfloat(item.strip(".")) or isint(item.strip(".")):
+                a[index] += f' (or {float(item)*5}/20 in france)'
+                print('---------------------' + str(a))
+                print('---------------------' + str(a[index]))
+                a = ' '.join(a)      
+                final.append(str(a))
+                break
+    
     for sentence in summarizer(parser.document, SENTENCES_COUNT):
         final.append(sentence)
     final = list(dict.fromkeys(final))
-    
-
     return final, look_at, url
+
+
+
 
 def ScrapGoogle(university, message):
     url = 'https://www.google.com/search?q=' + university + message
