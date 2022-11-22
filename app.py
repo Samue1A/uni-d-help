@@ -154,7 +154,7 @@ def ReturnFirstURLs(university, item):
 def filterLink(links):
     for item in links:
         if 'http' in item:
-            if '.edu' in item and not 'default/files/styles/' in item:
+            if '.edu' in item and (not 'default/files/styles/' in item) and (not '.png' in item):
                 #we should change the filter if it is about british unis i think they got .ac.uk
                 return item
 
