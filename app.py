@@ -162,7 +162,7 @@ def filterLink(links):
 def filterLinkUK(links):
     for item in links:
         if 'http' in item:
-            if '.ac.uk' in item and not 'default/files/styles/' in item:
+            if '.ac.uk' in item and (not 'default/files/styles/' in item) and (not '.png' in item):
                 #we should change the filter if it is about british unis i think they got .ac.uk
                 return item
 
