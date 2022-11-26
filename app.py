@@ -530,9 +530,7 @@ def greet():
         useStuffHead.append("Sources")
         useStuff.append(links)
     
-    doc = MakeDoc(headers, text, useStuff, useStuffHead, uni, 'US')
-    useStuffHead.append("Document")
-    useStuff.append(doc)
+
 
 
 
