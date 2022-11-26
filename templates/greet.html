@@ -35,8 +35,7 @@
                             {% endfor %}
                         </div class="spaceem">
                     {%elif useStuffHead[index] =='Document' %}
-                    <button onclick="href='../{{uni}}Research.docx';">bob</button>
-                        <a href="../{{uni}}Research.docx" download>dfghj</a>
+                        <div id="download"><a href="../static/{{uni}}Research.docx" download="{{uni}}Research.docx">Download as a word file</a></div>
                     {% elif useStuffHead[index] == 'Near You'%}
                         <div class="spaceem">
                             {%for place in useStuff[index]%}

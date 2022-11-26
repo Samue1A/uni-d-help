@@ -53,7 +53,7 @@ h3 {
 
 h1 {
     font-weight: bolder;
-    font-size: 180%;
+    font-size: 200%;
 }
 
 
@@ -72,4 +72,9 @@ h1 {
     .col2 {
         border-left: 2px solid gray;
     }
+}
+
+
+#download {
+    padding: 1rem;
 }

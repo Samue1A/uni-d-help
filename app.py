@@ -50,7 +50,7 @@ def MakeDoc(headers, text, useStuff, useStuffHead, uni, country):
             else:
                 document.add_paragraph(useStuff[index].replace((uni + ' University /'), ''))
 
-    document.save(uni + 'Research.docx')
+    document.save('static\\' + uni + 'Research.docx')
     return document
 
 
@@ -530,7 +530,9 @@ def greet():
         useStuffHead.append("Sources")
         useStuff.append(links)
     
-
+    doc = MakeDoc(headers, text, useStuff, useStuffHead, uni, 'US')
+    useStuffHead.append("Document")
+    useStuff.append(doc)
 
 
 
