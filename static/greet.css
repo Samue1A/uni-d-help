@@ -1,16 +1,30 @@
 body {
+    position: absolute;
+    top: 0;
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-    padding: 1rem;
     width: 99vw;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
 }
 
 h2 {
     font-size: 120%;
     font-weight: bold;
+    background-color: lightgrey;
+    padding: 1rem;
+    margin: 0;
+}
+
+.spaceem {
+
+    margin-top: 1rem;
+    margin-bottom: 1rem;
 }
 
 p {
     padding-left: 2rem;
+    padding-right: 2rem;
 }
 
 .bold {
@@ -29,4 +43,33 @@ h3 {
     margin-block-start: 3em;
     margin-top: 0;
     margin-bottom: 0;
+}
+
+#h1 {
+    padding: 1rem;
+    margin: 0;
+    background-color: rgb(135, 134, 134);
+}
+
+h1 {
+    font-weight: bolder;
+    font-size: 180%;
+}
+
+
+.cols {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    
+}
+@media screen and (min-width: 1000px) {
+    .cols {
+        grid-template-columns: 3fr 2fr;
+    }
+    .col1 {
+        border-right: 2px solid gray;
+    }
+    .col2 {
+        border-left: 2px solid gray;
+    }
 }

@@ -5,6 +5,8 @@ import bs4
 from bs4.element import Comment
 import csv
 import config
+from docx import Document
+
 
 from sumy.parsers.html import HtmlParser
 from sumy.parsers.plaintext import PlaintextParser
@@ -17,6 +19,41 @@ nltk.download('punkt')
 
 
 
+def MakeDoc(headers, text, useStuff, useStuffHead, uni, country):
+    document = Document()
+    for index, title in enumerate(headers):
+        if text[index]:
+            document.add_heading(title.capitalize(), 0)
+            for item in text[index]:
+                document.add_paragraph(str(item))
+    
+    for index, title in enumerate(useStuffHead):
+        if useStuff[index]:
+            document.add_heading(title.capitalize(), 0)
+            if useStuffHead[index] == 'Sources':
+                for item in useStuff[index]:
+                    document.add_paragraph(str(item))
+            elif useStuffHead[index] == 'Near You':
+                for place in useStuff[index]:
+                    document.add_paragraph(place)
+                    for item in useStuff[index][place]:
+                        if str(item) == 'nothing found':
+                            document.add_paragraph(str(item))      
+                        else:
+                            for key in item:
+                                document.add_paragraph(f'{key}: {item[key]}')
+            elif useStuffHead[index] == 'Subjects' or useStuffHead[index] == 'Majors':
+                if country == 'UK':
+                    document.add_paragraph(f'Here is a link with a list of possible courses: {useStuff[index]}')
+                elif country == 'US':
+                    document.add_paragraph(f'Here is a link with a list of possible majors: {useStuff[index]}')
+            else:
+                document.add_paragraph(useStuff[index].replace((uni + ' University /'), ''))
+
+    document.save(uni + 'Research.docx')
+    return document
+
+
 def PyYelp(location):
     url = 'https://api.yelp.com/v3/businesses/search'
     headers = {
@@ -26,6 +63,7 @@ def PyYelp(location):
     final = {
         'coffee shop': None,
         'Pizzeria': None,
+        'Grocery Store': None,
         'Library': None
     }
     for i in final:
@@ -37,9 +75,9 @@ def PyYelp(location):
         response = requests.get(url, headers=headers, params=params)
         try:
             businesses = response.json()["businesses"]
-            
+                
             rating = (sorted(businesses, key=lambda item: (item["rating"], (item["distance"]*-1))))
-            #learn how to sort by distance!
+                #learn how to sort by distance!
             if len(rating) > 2:
                 n1 = {
                     'name': rating[-1]["name"],
@@ -55,13 +93,18 @@ def PyYelp(location):
                 }
                 add.append(n1)
                 add.append(n2)
-            
+        
             final[i] = add.copy()
-        except KeyError:
-            final[i] = "nothing found"
+        except:
+            final[i] = 'nothing found'
+        
+
 
     print(final)
-    return final
+    for location in final:
+        if location != 'nothing found':
+            return final
+    return False
 
 
 def isfloat(num):
@@ -97,7 +140,7 @@ def GetText(link, look_at, SENTENCES_COUNT, country, university):
         a = (a.split('. ')[0].strip() + '.').split(' ')
         for index, item in enumerate(a):
             if isfloat(item.strip(".")) or isint(item.strip(".")):
-                a[index] += f' (or {float(item.strip("."))*5}/20 in france)'
+                a[index] += f' (or {round(float(item.strip("."))*5, 2)}/20 in france)'
                 print('---------------------' + str(a))
                 print('---------------------' + str(a[index]))
                 a = ' '.join(a)      
@@ -319,6 +362,8 @@ def uksearch():
     links = []
     headers = []
     text = []
+    useStuffHead = []
+    useStuff = []
     for item in list(all_text):
         headers.append(item[1].replace("+", " ").capitalize())
 
@@ -329,16 +374,16 @@ def uksearch():
         a = ScrapGoogle(uni, '+university+acceptance+rate').split('All results')[-1]
         a = a.split('%')[0]
         a = a.strip() + '%'
-        headers.append("Acceptance Rate")
-        text.append(a)
+        useStuffHead.append("Acceptance Rate")
+        useStuff.append(a)
     
     if major:
-        headers.append("Subjects")
-        text.append(majors)
+        useStuffHead.append("Subjects")
+        useStuff.append(majors)
 
     if sources:
-        headers.append("Sources")
-        text.append(links)
+        useStuffHead.append("Sources")
+        useStuff.append(links)
 
 
 
@@ -426,6 +471,8 @@ def greet():
     links = []
     headers = []
     text = []
+    useStuffHead = []
+    useStuff = []
     for item in list(all_text):
         headers.append(item[1].replace("+", " ").capitalize())
 
@@ -434,44 +481,63 @@ def greet():
 
     
     if major:
-        headers.append("Majors")
-        text.append(majors)
+        useStuffHead.append("Majors")
+        useStuff.append(majors)
     if acceptance_rate:
         a = ScrapGoogle(uni, '+university+acceptance+rate').split('All results')[-1]
         a = a.split('%')[0]
         a = a.strip() + '%'
-        headers.append("Acceptance Rate")
-        text.append(a)
+        useStuffHead.append("Acceptance Rate")
+        useStuff.append(a)
+
 
     try:
-        deadline = ScrapGoogle2(uni, '+university+application+deadline+date').split('\n\n')[1]
-        deadline = adFilter(check(deadline.replace('. ', ' .').replace('?', ' .').replace('›', ' .').replace('...', ' .').split(' .')).strip()).replace('\n', ' ') 
+        try:
+            deadline = ScrapGoogle2(uni, '+university+application+deadline+date').split('\n\n')[1]
+            deadline = adFilter(check(deadline.replace('. ', ' .').replace('?', ' .').replace('›', ' .').replace('...', ' .').split(' .')).strip()).replace('\n', ' ') 
+        except:
+            deadline = ScrapGoogle2(uni, '+university+application+deadline+date').split('Verbatim')[1]
+            deadline = adFilter(check(deadline.replace('. ', ' .').replace('?', ' .').replace('›', ' .').replace('...', ' .').split(' .')).strip()).replace('\n', ' ') 
+
+
+        if deadline[-1] != '.':
+            deadline += '.'
+
+        useStuffHead.append('Deadline')
+        useStuff.append(deadline)
+    
     except:
-        deadline = ScrapGoogle2(uni, '+university+application+deadline+date').split('Verbatim')[1]
-        deadline = adFilter(check(deadline.replace('. ', ' .').replace('?', ' .').replace('›', ' .').replace('...', ' .').split(' .')).strip()).replace('\n', ' ') 
-
-
-    if deadline[-1] != '.':
-        deadline += '.'
-
-    headers.append('Deadline')
-    text.append(deadline)
+        pass
 
     if location:
-        z = ScrapGoogle(uni, '+university+location').split('All results')[-1].split('- Wikipedia')[0]
-        y = ScrapGoogle(uni, '+university+location').split('All results')[-1].split('- Wikipedia')[0]
-        x = [z, PyYelp(z)]
-        headers.append("Location")
-        text.append(x)
+        print(ScrapGoogle(uni, '+university+location'))
+        z = ScrapGoogle(uni, '+university+location').split('All results')[-1].split('- Wikipedia')[0].split('See results')[0].replace('›', '.').replace('|', '.').replace('/', '').replace('\\', '').split('.')
+        print(z)
+        for senty in z:   
+            nearYou = PyYelp(senty.strip())
+            print('--------------------' + str(nearYou))
+            if nearYou:
+                print(nearYou)
+                useStuffHead.append("Location")
+                useStuff.append(senty)
+                useStuffHead.append("Near You")
+                useStuff.append(nearYou)
+                break
+
+
+
     if sources:
-        headers.append("Sources")
-        text.append(links)
+        useStuffHead.append("Sources")
+        useStuff.append(links)
     
+    doc = MakeDoc(headers, text, useStuff, useStuffHead, uni, 'US')
+    useStuffHead.append("Document")
+    useStuff.append(doc)
 
 
 
     print(text[-1])
     print(len(text))
     print('\n\n\n' + str(SENTENCES_COUNT))
-    print(listy)
-    return render_template('greet.html', text=text, headers=headers, country='US', uni=uni)
+    print(useStuff)
+    return render_template('greet.html', text=text, headers=headers, country='US', uni=uni, useStuff=useStuff, useStuffHead=useStuffHead)

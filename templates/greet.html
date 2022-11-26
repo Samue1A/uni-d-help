@@ -8,52 +8,70 @@
     <title>Document</title>
 </head>
 <body>
-    {% for index in range(0, headers | length)%}
-        {% if text[index] %}
-            <h2>{{ headers[index] }}</h2>
-            {% if index+1 == headers | length %}
-                {% for i in text[index] %}
-                    <a href={{i}}><p>{{ i }}</p></a>
-                {% endfor %}
-            {% elif headers[index] == 'Subjects' or headers[index] == 'Majors'  %}
-                {% if country == 'UK' %}
-                    <p>Here is a link with a list of possible courses: <a href="{{text[index]}}">{{text[index]}}</a></p>
-                {% else %}
-                    <p>Here is a link with a list of possible majors: <a href="{{text[3]}}">{{text[3]}}</a></p>
-                {% endif %}
-            {% elif headers[index] == 'Acceptance Rate'%}
-                <p>    {{ text[index].replace((uni + ' University /'), '') }}</p>
-            {% elif headers[index] == 'Deadline'%}
-                <p>    {{ text[index] }}</p>
-            {% elif headers[index] == 'Location'%}
-                <p>    {{ text[index][0].replace((uni + ' University /'), '') }}</p>
-                {%for place in text[index][-1]%}
-                    <h3>{{place}}</h3>
-                    {%for item in text[index][-1][place]%}
-                        {% if item == "nothing found"%}
-                            <p>{{item}}</p>
-                        {%else%}
-                            {%for key in item%}
-                                <p class="location_info">{{key}}: {{item[key]}}</p>
+    <div id="h1"><h1>{{uni}} Notes:</h1></div>
+    <div class="cols">
+        <div class="col1">
+            {% for index in range(0, headers | length)%}
+                {% if text[index] %}
+                    <h2>{{ headers[index] }}</h2>
+                    <div class="spaceem">
+                        {% for item in text[index] %}
+                            {% if item | string != 'Story 1 Story 2 Story 3 Story 4 Story 5'%}
+                                <p> - {{ item }}</p>
+                            {%endif%}
+                        {% endfor %}
+                    </div class="spaceem">
+                {%endif%}
+            {% endfor %}
+        </div>
+        <div class="cl2">
+            {% for index in range(0, useStuffHead | length)%}
+                {% if useStuff[index] %}
+                    <h2>{{ useStuffHead[index] }}</h2>
+                    {% if useStuffHead[index] == 'Sources' %}
+                        <div class="spaceem">
+                            {% for i in useStuff[index] %}
+                                <a target="_blank" href={{i}}><p>{{ i }}</p></a>
+                            {% endfor %}
+                        </div class="spaceem">
+                    {%elif useStuffHead[index] =='Document' %}
+                    <button onclick="href='../{{uni}}Research.docx';">bob</button>
+                        <a href="../{{uni}}Research.docx" download>dfghj</a>
+                    {% elif useStuffHead[index] == 'Near You'%}
+                        <div class="spaceem">
+                            {%for place in useStuff[index]%}
+                                <h3>{{place}}</h3>
+                                {%for item in useStuff[index][place]%}
+                                    {% if item == "nothing found"%}
+                                        <p>{{item}}</p>
+                                    {%else%}
+                                        {%for key in item%}
+                                            <p class="location_info">{{key}}: {{item[key]}}</p>
+                                        {%endfor%}
+                                    {%endif%}
+                                {%endfor%}
                             {%endfor%}
-                            <p><br></p>
-                        {%endif%}
-                    {%endfor%}
-                {%endfor%}
-            {% else %}
-                {% for item in text[index] %}
-                    {% if item | string != 'Story 1 Story 2 Story 3 Story 4 Story 5'%}
-                        <p> - {{ item }}</p>
+                        </div class="spaceem">
+                    {% elif not useStuff[index] is string %}
+                        <div class="spaceem">
+                            {% for item in useStuff[index] %}
+                                <p> - {{ item }}</p>
+                            {% endfor %}
+                        </div class="spaceem">
+                    {% elif useStuffHead[index] == 'Subjects' or useStuffHead[index] == 'Majors'  %}
+                        <div class="spaceem">
+                            {% if country == 'UK' %}
+                                <p>Here is a link with a list of possible courses: <a href="{{useStuff[index]}}">{{useStuff[index]}}</a></p>
+                            {% else %}
+                                <p>Here is a link with a list of possible majors: <a href="{{useStuff[index]}}">{{useStuff[index]}}</a></p>
+                            {% endif %}
+                        </div class="spaceem">
+                    {%else%}
+                        <div class="spaceem">
+                            <p>    {{ useStuff[index].replace((uni + ' University /'), '') }}</p>
+                        </div class="spaceem">
                     {%endif%}
-                {% endfor %}
-            {%endif%}
-        {%endif%}
-    {% endfor %}
-
-
-
-</body>
-<script>
-    console.log(text[0])
-</script>
-</html>
+                {%endif%}
+            {% endfor %}
+        </div>
+    </div>
