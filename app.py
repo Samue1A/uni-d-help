@@ -79,8 +79,11 @@ def PyYelp(location):
                 
             yelpItems = [
                 (sorted(businesses, key=lambda item: (item["rating"], (item["distance"]*-1)))),
-                (sorted(businesses, key=lambda item: (item["distance"], (item["rating"]*-1))))
+                (sorted(businesses, key=lambda item: (item["distance"], (item["rating"]*-1)))).reverse()
             ]
+            print(yelpItems[0])
+            print('-----------------------------')
+            print(yelpItems[1])
             
             for yelpItem in yelpItems:
                 for OneToTwo in range(2):
@@ -89,7 +92,8 @@ def PyYelp(location):
                             'name': yelpItem[(OneToTwo + 1)*-1]["name"],
                             'location': (yelpItem[(OneToTwo + 1)*-1]['location'])["address1"],
                             'rating': yelpItem[(OneToTwo + 1)*-1]["rating"],
-                            'phone': yelpItem[(OneToTwo + 1)*-1]["phone"]
+                            'phone': yelpItem[(OneToTwo + 1)*-1]["phone"],
+                            'distance': str(round(yelpItem[(OneToTwo + 1)*-1]["distance"])) +'m'
                         })
                     except:
                         pass 
@@ -216,10 +220,6 @@ def DoForEach(university, SENTENCES_COUNT, list=['needed grades', 'application',
 
 
 
-
-
-
-
 def check(text):
     months = ['january', 'jebruary', 'jarch', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december']
     for sentence in text:
@@ -242,34 +242,7 @@ def tag_visible2(element):
         return False
     return True
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#-----------------------------------------------------------------------------------------------------------------------
+#-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
  
 # Flask constructor
 app = Flask(__name__)
@@ -277,9 +250,7 @@ app = Flask(__name__)
 commments = [
     ["comment", "file"]
 ]
- 
-# A decorator used to tell the application
-# which URL is associated function
+
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
@@ -295,45 +266,30 @@ def index():
     return render_template("index.html")
 
 
+
+
 @app.route('/uksearch', methods=['GET', 'POST'])
 def uksearch():
-    name = request.args.get("name")
+    uni = request.args.get("name").capitalize()
     listy = request.args.getlist("listy")
     SENTENCES_COUNT = request.args.get("lines")
 
-    major = False
-    sources = False
     if not SENTENCES_COUNT:
         SENTENCES_COUNT = 10
-    if 'major' in listy:
-        major = True
-        listy.remove('major')
-    else:
-        major = False
-    if 'sources' in listy:
-        sources = True
-        listy.remove('sources')
-    else:
-        sources = False
-    if 'location' in listy:
-        location = True
-        listy.remove('location')
-    else:
-        location = False
-    if 'acceptance rate' in listy:
-        acceptance_rate = True
-        listy.remove('acceptance rate')
-    else:
-        acceptance_rate = False
-
     
-    
+    all = {
+        'major': False,
+        'sources': False,
+        'acceptance rate': False,
+    }
 
-    uni = name.capitalize()
+    for item in all:
+        if item in listy:
+            listy.remove(item)
+            all[item] = True
+
 
     all_text = list(DoForEach(uni, SENTENCES_COUNT, listy, 'UK'))
-    if major:
-        majors = filterLink(ReturnFirstURLs(uni, 'major'), 'uk')
 
     links = []
     headers = []
@@ -346,18 +302,17 @@ def uksearch():
         text.append(item[0])
         links.append(item[-1])
     
-    if acceptance_rate:
+    if all['acceptance rate']:
         a = ScrapGoogle(uni, '+university+acceptance+rate').split('All results')[-1]
         a = a.split('%')[0]
         a = a.strip() + '%'
         useStuffHead.append("Acceptance Rate")
         useStuff.append(a)
-    
-    if major:
+    if all['major']:
+        majors = filterLink(ReturnFirstURLs(uni, 'major'), 'uk')
         useStuffHead.append("Subjects")
         useStuff.append(majors)
-
-    if sources:
+    if all['sources']:
         useStuffHead.append("Sources")
         useStuff.append(links)
 
@@ -401,40 +356,28 @@ def admin():
 
 @app.route('/ussearch')
 def greet():
-    name = request.args.get("name")
+    uni = request.args.get("name").capitalize()
     listy = request.args.getlist("listy")
     SENTENCES_COUNT = request.args.get("lines")
 
-    major = False
-    sources = False
     if not SENTENCES_COUNT:
         SENTENCES_COUNT = 10
-    if 'major' in listy:
-        major = True
-        listy.remove('major')
-    else:
-        major = False
-    if 'sources' in listy:
-        sources = True
-        listy.remove('sources')
-    else:
-        sources = False
-    if 'location' in listy:
-        location = True
-        listy.remove('location')
-    else:
-        location = False
-    if 'acceptance rate' in listy:
-        acceptance_rate = True
-        listy.remove('acceptance rate')
-    else:
-        acceptance_rate = False
+    
+    all = {
+        'major': False,
+        'sources': False,
+        'acceptance rate': False,
+        'location': False,
+        'deadline': False
+    }
 
-    uni = name.capitalize()
+    for item in all:
+        if item in listy:
+            listy.remove(item)
+            all[item] = True
+
 
     all_text = list(DoForEach(uni, SENTENCES_COUNT, listy, 'US'))
-    if major:
-        majors = filterLink(ReturnFirstURLs(uni, 'major'))
 
     links = []
     headers = []
@@ -446,12 +389,13 @@ def greet():
 
         text.append(item[0])
         links.append(item[-1])
-
     
-    if major:
-        useStuffHead.append("Majors")
-        useStuff.append(majors)
-    if acceptance_rate:
+    # doc = MakeDoc(headers, text, useStuff, useStuffHead, uni, 'US')
+    # useStuffHead.append("Document")
+    # useStuff.append(doc)
+
+
+    if all['acceptance rate']:
         a = ScrapGoogle(uni, '+university+acceptance+rate').split('All results')[-1]
         a = a.split('%')[0]
         a = a.strip() + '%'
@@ -460,27 +404,25 @@ def greet():
                 useStuffHead.append("Acceptance Rate")
                 useStuff.append(a)
                 break
-
-
-    try:
+    if all['major']:
+        majors = filterLink(ReturnFirstURLs(uni, 'major'), 'us')
+        useStuffHead.append("Majors")
+        useStuff.append(majors)
+    if all['deadline']:
         try:
-            deadline = ScrapGoogle(uni, '+university+application+deadline+date', 2).split('\n\n')[1]
-            deadline = adFilter(check(deadline.replace('. ', ' .').replace('?', ' .').replace('›', ' .').replace('...', ' .').split(' .')).strip()).replace('\n', ' ') 
+            try:
+                deadline = ScrapGoogle(uni, '+university+application+deadline+date', 2).split('\n\n')[1]
+                deadline = adFilter(check(deadline.replace('. ', ' .').replace('?', ' .').replace('›', ' .').replace('...', ' .').split(' .')).strip()).replace('\n', ' ') 
+            except:
+                deadline = ScrapGoogle(uni, '+university+application+deadline+date', 2).split('Verbatim')[1]
+                deadline = adFilter(check(deadline.replace('. ', ' .').replace('?', ' .').replace('›', ' .').replace('...', ' .').split(' .')).strip()).replace('\n', ' ') 
+            if deadline[-1] != '.':
+                deadline += '.'
+            useStuffHead.append('Deadline')
+            useStuff.append(deadline)
         except:
-            deadline = ScrapGoogle(uni, '+university+application+deadline+date', 2).split('Verbatim')[1]
-            deadline = adFilter(check(deadline.replace('. ', ' .').replace('?', ' .').replace('›', ' .').replace('...', ' .').split(' .')).strip()).replace('\n', ' ') 
-
-
-        if deadline[-1] != '.':
-            deadline += '.'
-
-        useStuffHead.append('Deadline')
-        useStuff.append(deadline)
-    
-    except:
-        pass
-
-    if location:
+            pass
+    if all['location']:
         z = ScrapGoogle(uni, '+university+location').split('All results')[-1].split('- Wikipedia')[0].split('See results')[0].replace('›', '.').replace('|', '.').replace('/', '').replace('\\', '').split('.')
         for senty in z:   
             nearYou = PyYelp(senty.strip())
@@ -489,18 +431,12 @@ def greet():
                 useStuff.append(senty)
                 useStuffHead.append("Near You")
                 useStuff.append(nearYou)
+
                 break
-
-
-
-    if sources:
+    if all['sources']:
         useStuffHead.append("Sources")
         useStuff.append(links)
     
-    # doc = MakeDoc(headers, text, useStuff, useStuffHead, uni, 'US')
-    # useStuffHead.append("Document")
-    # useStuff.append(doc)
-
 
 
 

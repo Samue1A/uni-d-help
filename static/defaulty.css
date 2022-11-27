@@ -1,0 +1,21 @@
+.collapsible__content {
+    overflow: hidden;
+    display: none;
+    transition: all 0.3s;
+}
+
+.collapsible--expanded .collapsible__content {
+    display: block;
+}
+
+
+.svg_contain {
+    position: relative;
+}
+
+svg {
+    position: relative;
+    top: 0.3rem;
+    width: 1rem;
+}
+

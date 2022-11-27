@@ -35,6 +35,7 @@ p {
 h3 {
     margin-block-start: 2em;
     padding-left: 3rem;
+    display: inline;
 }
 
 .location_info {
