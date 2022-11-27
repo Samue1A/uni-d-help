@@ -77,36 +77,34 @@ def PyYelp(location):
         try:
             businesses = response.json()["businesses"]
                 
-            rating = (sorted(businesses, key=lambda item: (item["rating"], (item["distance"]*-1))))
+            yelpItems = [
+                (sorted(businesses, key=lambda item: (item["rating"], (item["distance"]*-1)))),
+                (sorted(businesses, key=lambda item: (item["distance"], (item["rating"]*-1))))
+            ]
             
-                #learn how to sort by distance!
-            if len(rating) > 2:
-                n1 = {
-                    'name': rating[-1]["name"],
-                    'location': (rating[-1]['location'])["address1"],
-                    'rating': rating[-1]["rating"],
-                    'phone': rating[-1]["phone"]
-                }
-                n2 = {
-                    'name': rating[-2]["name"],
-                    'location': (rating[-2]['location'])["address1"],
-                    'rating': rating[-2]["rating"],
-                    'phone': rating[-2]["phone"]
-                }
-                add.append(n1)
-                add.append(n2)
+            for yelpItem in yelpItems:
+                for OneToTwo in range(2):
+                    try:
+                        add.append( {
+                            'name': yelpItem[(OneToTwo + 1)*-1]["name"],
+                            'location': (yelpItem[(OneToTwo + 1)*-1]['location'])["address1"],
+                            'rating': yelpItem[(OneToTwo + 1)*-1]["rating"],
+                            'phone': yelpItem[(OneToTwo + 1)*-1]["phone"]
+                        })
+                    except:
+                        pass 
+            #learn how to sort by distance!
         
             final[i] = add.copy()
         except:
             final[i] = 'nothing found'
         
-
-
-    print(final)
     for location in final:
         if location != 'nothing found':
             return final
     return False
+
+
 
 
 def isfloat(num):
@@ -134,8 +132,6 @@ def GetText(link, look_at, SENTENCES_COUNT, country, university):
     summarizer = Summarizer(stemmer)
     summarizer.stop_words = get_stop_words(LANGUAGE)
     final = []
-    print(0)
-    print(f"look at: {look_at} country: {country}")
     if look_at == 'needed+grades' and country == 'US':
         a = ScrapGoogle(university, '+university+average+gpa')
         a = a.split('All results')[-1]
@@ -143,8 +139,6 @@ def GetText(link, look_at, SENTENCES_COUNT, country, university):
         for index, item in enumerate(a):
             if isfloat(item.strip(".")) or isint(item.strip(".")):
                 a[index] += f' (or {round(float(item.strip("."))*5, 2)}/20 in france)'
-                print('---------------------' + str(a))
-                print('---------------------' + str(a[index]))
                 a = ' '.join(a)      
                 final.append(str(a))
                 break
@@ -157,15 +151,17 @@ def GetText(link, look_at, SENTENCES_COUNT, country, university):
 
 
 
-def ScrapGoogle(university, message):
+def ScrapGoogle(university, message, num=1):
     url = 'https://www.google.com/search?q=' + university + message
-    print('looked up ' + url)
     headers = {"User-Agent": "Mozilla/5.0"}
     cookies = {"CONSENT": "YES+cb.20210720-07-p0.en+FX+410"}
     request_result = requests.get(url, headers=headers, cookies=cookies)
     soup = bs4.BeautifulSoup(request_result.text, "html.parser")
     texts = soup.findAll(text=True)
-    visible_texts = filter(tag_visible, texts)  
+    if num == 1:
+        visible_texts = filter(tag_visible, texts)  
+    else:
+        visible_texts = filter(tag_visible2, texts)  
     return u" ".join(t.strip() for t in visible_texts)
 #idk why but only the second link with .edu works, the first one is weird
 #try to remove the limit of lines you can print cuz i think they erase the first ones
@@ -193,23 +189,16 @@ def ReturnFirstURLs(university, item):
     for href in heading_object:
         URLs.append(href.get('href').split("/url?q=")[-1].split("&")[0])
     return URLs
-    #idk why but only the second link with .edu works, the first one is weird
-    #try to remove the limit of lines you can print cuz i think they erase the first ones
 
-def filterLink(links):
+def filterLink(links, country='us'):
     for item in links:
         if 'http' in item:
-            if '.edu' in item and (not 'default/files/styles/' in item) and (not '.png' in item):
-                #we should change the filter if it is about british unis i think they got .ac.uk
-                return item
-
-
-def filterLinkUK(links):
-    for item in links:
-        if 'http' in item:
-            if '.ac.uk' in item and (not 'default/files/styles/' in item) and (not '.png' in item):
-                #we should change the filter if it is about british unis i think they got .ac.uk
-                return item
+            if country.lower() == 'us':
+                if '.edu' in item and (not 'default/files/styles/' in item) and (not '.png' in item):
+                    return item
+            else:
+                if '.ac.uk' in item and (not 'default/files/styles/' in item) and (not '.png' in item):
+                    return item
 
 
 def DoForEach(university, SENTENCES_COUNT, list=['needed grades', 'application', 'cost'], country='US'):
@@ -220,7 +209,7 @@ def DoForEach(university, SENTENCES_COUNT, list=['needed grades', 'application',
         if ' ' in item:
             item = '+'.join(item.split(' '))
         if country == 'UK':
-            returnn.append(GetText(filterLinkUK(ReturnFirstURLs(university, item)), item, SENTENCES_COUNT, country, university))
+            returnn.append(GetText(filterLink(ReturnFirstURLs(university, item), 'uk'), item, SENTENCES_COUNT, country, university))
         else:
             returnn.append(GetText(filterLink(ReturnFirstURLs(university, item)), item, SENTENCES_COUNT, country, university))
     return returnn
@@ -245,18 +234,6 @@ def adFilter(text):
         return text.split('.')[-1]
     return text
 
-
-
-def ScrapGoogle2(university, message):
-    url = 'https://www.google.com/search?q=' + university + message
-    print(url)
-    headers = {"User-Agent": "Mozilla/5.0"}
-    cookies = {"CONSENT": "YES+cb.20210720-07-p0.en+FX+410"}
-    request_result = requests.get(url, headers=headers, cookies=cookies)
-    soup = bs4.BeautifulSoup(request_result.text, "html.parser")
-    texts = soup.findAll(text=True)
-    visible_texts = filter(tag_visible2, texts)  
-    return u" ".join(t.strip() for t in visible_texts)
 
 def tag_visible2(element):
     if element.parent.name in ['style', 'script', 'head', 'title', 'meta', '[document]']:
@@ -355,11 +332,8 @@ def uksearch():
     uni = name.capitalize()
 
     all_text = list(DoForEach(uni, SENTENCES_COUNT, listy, 'UK'))
-    for bob in all_text:
-        for bobb in bob:
-            print(bobb)
     if major:
-        majors = filterLinkUK(ReturnFirstURLs(uni, 'major'))
+        majors = filterLink(ReturnFirstURLs(uni, 'major'), 'uk')
 
     links = []
     headers = []
@@ -389,9 +363,6 @@ def uksearch():
 
 
 
-    print(text[-1])
-    print('\n\n\n' + str(SENTENCES_COUNT))
-    print(listy)
     return render_template('greet.html', text=text, headers=headers, country='UK', uni=uni)
 
 
@@ -412,16 +383,14 @@ def admin():
             with open("comments.csv", "r") as file:
                 reader = csv.reader(file)
                 for row in reader:
-                    print(row)
                     if x == 0:
                         titles = row.copy()
                     else:
-                        print(1)
+                        
                         if row != []:
-                            print(2)
+                            
                             items.append(row)
                     x += 1
-            print(items)
             return render_template('admin.html', items=items, titles=titles)
     return render_template('admin.html')
 
@@ -464,9 +433,6 @@ def greet():
     uni = name.capitalize()
 
     all_text = list(DoForEach(uni, SENTENCES_COUNT, listy, 'US'))
-    for bob in all_text:
-        for bobb in bob:
-            print(bobb)
     if major:
         majors = filterLink(ReturnFirstURLs(uni, 'major'))
 
@@ -489,16 +455,19 @@ def greet():
         a = ScrapGoogle(uni, '+university+acceptance+rate').split('All results')[-1]
         a = a.split('%')[0]
         a = a.strip() + '%'
-        useStuffHead.append("Acceptance Rate")
-        useStuff.append(a)
+        for item in (a.split('. ')):
+            if '%' in item:
+                useStuffHead.append("Acceptance Rate")
+                useStuff.append(a)
+                break
 
 
     try:
         try:
-            deadline = ScrapGoogle2(uni, '+university+application+deadline+date').split('\n\n')[1]
+            deadline = ScrapGoogle(uni, '+university+application+deadline+date', 2).split('\n\n')[1]
             deadline = adFilter(check(deadline.replace('. ', ' .').replace('?', ' .').replace('›', ' .').replace('...', ' .').split(' .')).strip()).replace('\n', ' ') 
         except:
-            deadline = ScrapGoogle2(uni, '+university+application+deadline+date').split('Verbatim')[1]
+            deadline = ScrapGoogle(uni, '+university+application+deadline+date', 2).split('Verbatim')[1]
             deadline = adFilter(check(deadline.replace('. ', ' .').replace('?', ' .').replace('›', ' .').replace('...', ' .').split(' .')).strip()).replace('\n', ' ') 
 
 
@@ -512,14 +481,10 @@ def greet():
         pass
 
     if location:
-        print(ScrapGoogle(uni, '+university+location'))
         z = ScrapGoogle(uni, '+university+location').split('All results')[-1].split('- Wikipedia')[0].split('See results')[0].replace('›', '.').replace('|', '.').replace('/', '').replace('\\', '').split('.')
-        print(z)
         for senty in z:   
             nearYou = PyYelp(senty.strip())
-            print('--------------------' + str(nearYou))
             if nearYou:
-                print(nearYou)
                 useStuffHead.append("Location")
                 useStuff.append(senty)
                 useStuffHead.append("Near You")
@@ -538,8 +503,5 @@ def greet():
 
 
 
-    print(text[-1])
-    print(len(text))
-    print('\n\n\n' + str(SENTENCES_COUNT))
-    print(useStuff)
+
     return render_template('greet.html', text=text, headers=headers, country='US', uni=uni, useStuff=useStuff, useStuffHead=useStuffHead)
