@@ -427,10 +427,11 @@ def greet():
         for senty in z:   
             nearYou = PyYelp(senty.strip())
             if nearYou:
-                useStuffHead.append("Location")
-                useStuff.append(senty)
                 useStuffHead.append("Near You")
                 useStuff.append(nearYou)
+                useStuffHead.append("Location")
+                useStuff.append(senty)
+
 
                 break
     if all['sources']:
