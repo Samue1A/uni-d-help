@@ -79,9 +79,11 @@
     border: 1px solid var(--color-border);
     color: royalblue;
     text-align: center;
-    font-size: 3vw;
+    font-size: 3.5vw;
     outline: 0;
     padding: auto;
+    padding-left: 0;
+    padding-right: 0;
   }
   
   ::placeholder {
@@ -111,7 +113,7 @@
   
   @media screen and (min-width: 1024px) {
     .input {
-      font-size: 1.5rem;
+      font-size: 2.5vw;
     }
     .input-group {
         max-width: 60vw;

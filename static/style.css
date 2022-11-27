@@ -245,7 +245,8 @@ h2 {
 .hide {
     background-color: aliceblue;
     width: 50vw;
-    height: 85vh;
+    min-width: auto;
+    min-height: auto;
     border-radius: 5%;
     z-index: 12;
     position: fixed;
@@ -256,6 +257,9 @@ h2 {
     align-items: center;
     display: none;
 }
+
+
+
 .checkboxes {
     margin: 3vw;
     margin-top: 5vw;
@@ -272,6 +276,7 @@ h2 {
     border: 1px solid #ced4d4;
     border-radius: 10px;
     margin: 1vw;
+    min-width: auto;
 }
 
 .num:focus {
@@ -281,18 +286,33 @@ h2 {
 }
 
 .btns {
+    margin-top: 5rem;
     color: white;
     background-color: #0d6efd;
     outline: 0;
     border: 0;
+    z-index: 12;
     border-radius: 1rem;
     width: 12vw;
+    min-width: auto;
     height: 7vh;
     padding: 1rem;
-    float: bottom;
     margin-bottom: 3vw;
-    position: absolute;
-    bottom: 0;
+    margin: 2rem;
+}
+@media screen and (max-width: 1000px) {
+    .hide {
+        width: 80vw;
+        right: 10vw;
+    }
+    .num,
+    .lines {
+        width: 50%;
+    }
+    .btns {
+        width: 50%;
+
+    }
 }
 
 #uk {

@@ -5,7 +5,7 @@ import bs4
 from bs4.element import Comment
 import csv
 import config
-from docx import Document
+# from docx import Document
 
 
 from sumy.parsers.html import HtmlParser
@@ -14,44 +14,45 @@ from sumy.nlp.tokenizers import Tokenizer
 from sumy.summarizers.lsa import LsaSummarizer as Summarizer
 from sumy.nlp.stemmers import Stemmer
 from sumy.utils import get_stop_words
-import nltk
-nltk.download('punkt')
+# import nltk
+# nltk.download('punkt')
 
 
-
-def MakeDoc(headers, text, useStuff, useStuffHead, uni, country):
-    document = Document()
-    for index, title in enumerate(headers):
-        if text[index]:
-            document.add_heading(title.capitalize(), 0)
-            for item in text[index]:
-                document.add_paragraph(str(item))
+#do this later (current error, it only works in my computer so u should learn some github documentation if it exists to reverse the connection,
+# could also be the secret to a faster website: you have a database of things that have already been looked up and use them if the uni has already been looked up)
+# def MakeDoc(headers, text, useStuff, useStuffHead, uni, country):
+#     document = Document()
+#     for index, title in enumerate(headers):
+#         if text[index]:
+#             document.add_heading(title.capitalize(), 0)
+#             for item in text[index]:
+#                 document.add_paragraph(str(item))
     
-    for index, title in enumerate(useStuffHead):
-        if useStuff[index]:
-            document.add_heading(title.capitalize(), 0)
-            if useStuffHead[index] == 'Sources':
-                for item in useStuff[index]:
-                    document.add_paragraph(str(item))
-            elif useStuffHead[index] == 'Near You':
-                for place in useStuff[index]:
-                    document.add_paragraph(place)
-                    for item in useStuff[index][place]:
-                        if str(item) == 'nothing found':
-                            document.add_paragraph(str(item))      
-                        else:
-                            for key in item:
-                                document.add_paragraph(f'{key}: {item[key]}')
-            elif useStuffHead[index] == 'Subjects' or useStuffHead[index] == 'Majors':
-                if country == 'UK':
-                    document.add_paragraph(f'Here is a link with a list of possible courses: {useStuff[index]}')
-                elif country == 'US':
-                    document.add_paragraph(f'Here is a link with a list of possible majors: {useStuff[index]}')
-            else:
-                document.add_paragraph(useStuff[index].replace((uni + ' University /'), ''))
+#     for index, title in enumerate(useStuffHead):
+#         if useStuff[index]:
+#             document.add_heading(title.capitalize(), 0)
+#             if useStuffHead[index] == 'Sources':
+#                 for item in useStuff[index]:
+#                     document.add_paragraph(str(item))
+#             elif useStuffHead[index] == 'Near You':
+#                 for place in useStuff[index]:
+#                     document.add_paragraph(place)
+#                     for item in useStuff[index][place]:
+#                         if str(item) == 'nothing found':
+#                             document.add_paragraph(str(item))      
+#                         else:
+#                             for key in item:
+#                                 document.add_paragraph(f'{key}: {item[key]}')
+#             elif useStuffHead[index] == 'Subjects' or useStuffHead[index] == 'Majors':
+#                 if country == 'UK':
+#                     document.add_paragraph(f'Here is a link with a list of possible courses: {useStuff[index]}')
+#                 elif country == 'US':
+#                     document.add_paragraph(f'Here is a link with a list of possible majors: {useStuff[index]}')
+#             else:
+#                 document.add_paragraph(useStuff[index].replace((uni + ' University /'), ''))
 
-    document.save('static\\' + uni + 'Research.docx')
-    return document
+#     document.save('static\\' + uni + 'Research.docx')
+#     return document
 
 
 def PyYelp(location):
@@ -77,6 +78,7 @@ def PyYelp(location):
             businesses = response.json()["businesses"]
                 
             rating = (sorted(businesses, key=lambda item: (item["rating"], (item["distance"]*-1))))
+            
                 #learn how to sort by distance!
             if len(rating) > 2:
                 n1 = {
