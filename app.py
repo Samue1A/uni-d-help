@@ -14,8 +14,8 @@ from sumy.nlp.tokenizers import Tokenizer
 from sumy.summarizers.lsa import LsaSummarizer as Summarizer
 from sumy.nlp.stemmers import Stemmer
 from sumy.utils import get_stop_words
-# import nltk
-# nltk.download('punkt')
+import nltk
+
 
 
 #do this later (current error, it only works in my computer so u should learn some github documentation if it exists to reverse the connection,
