@@ -222,7 +222,7 @@ def DoForEach(university, SENTENCES_COUNT, list=['needed grades', 'application',
 
 
 def check(text):
-    months = ['january', 'jebruary', 'jarch', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december']
+    months = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december']
     for sentence in text:
         for month in months:
             if month in sentence.lower():
