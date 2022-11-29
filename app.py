@@ -19,6 +19,7 @@ nltk.download('punkt')
 
 
 
+
 #do this later (current error, it only works in my computer so u should learn some github documentation if it exists to reverse the connection,
 # could also be the secret to a faster website: you have a database of things that have already been looked up and use them if the uni has already been looked up)
 # def MakeDoc(headers, text, useStuff, useStuffHead, uni, country):
