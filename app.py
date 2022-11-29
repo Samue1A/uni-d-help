@@ -4,8 +4,9 @@ import requests
 import bs4
 from bs4.element import Comment
 import csv
-import config
+import config  #---> c'est le API key du Yelp api
 # from docx import Document
+
 
 from sumy.parsers.html import HtmlParser
 from sumy.parsers.plaintext import PlaintextParser
@@ -15,8 +16,6 @@ from sumy.nlp.stemmers import Stemmer
 from sumy.utils import get_stop_words
 import nltk
 nltk.download('punkt')
-
-
 
 
 #do this later (current error, it only works in my computer so u should learn some github documentation if it exists to reverse the connection,
@@ -82,9 +81,6 @@ def PyYelp(location):
                 (sorted(businesses, key=lambda item: (item["rating"], (item["distance"]*-1)))),
                 (sorted(businesses, key=lambda item: (item["distance"], (item["rating"]*-1)))).reverse()
             ]
-            print(yelpItems[0])
-            print('-----------------------------')
-            print(yelpItems[1])
             
             for yelpItem in yelpItems:
                 for OneToTwo in range(2):
@@ -98,16 +94,13 @@ def PyYelp(location):
                         })
                     except:
                         pass 
-            #learn how to sort by distance!
         
             final[i] = add.copy()
         except:
-            final[i] = 'nothing found'
-        
-    for location in final:
-        if location != 'nothing found':
-            return final
-    return False
+            return False
+
+    
+    return final
 
 
 
@@ -129,9 +122,6 @@ def isint(num):
 def GetText(link, look_at, SENTENCES_COUNT, country, university):
     url = link.split('%')[0]
     parser = HtmlParser.from_url(url, Tokenizer(LANGUAGE))
-    # or for plain text files
-    # parser = PlaintextParser.from_file("document.txt", Tokenizer(LANGUAGE))
-    # parser = PlaintextParser.from_string("Check this out.", Tokenizer(LANGUAGE))
     stemmer = Stemmer(LANGUAGE)
 
     summarizer = Summarizer(stemmer)
@@ -168,8 +158,6 @@ def ScrapGoogle(university, message, num=1):
     else:
         visible_texts = filter(tag_visible2, texts)  
     return u" ".join(t.strip() for t in visible_texts)
-#idk why but only the second link with .edu works, the first one is weird
-#try to remove the limit of lines you can print cuz i think they erase the first ones
 
 
 def tag_visible(element):
@@ -207,8 +195,6 @@ def filterLink(links, country='us'):
 
 
 def DoForEach(university, SENTENCES_COUNT, list=['needed grades', 'application', 'cost'], country='US'):
-    #major should be replaced by courses if it is a british uni
-    #acceptance rate doesn't work, for ssome reason it is the link just after but we should learn how to take the number from the center of the web page
     returnn = []
     for item in list:
         if ' ' in item:
@@ -222,7 +208,7 @@ def DoForEach(university, SENTENCES_COUNT, list=['needed grades', 'application',
 
 
 def check(text):
-    months = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december']
+    months = ['january', 'jebruary', 'jarch', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december']
     for sentence in text:
         for month in months:
             if month in sentence.lower():
@@ -245,12 +231,9 @@ def tag_visible2(element):
 
 #-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
  
-# Flask constructor
+# Flask time babyyyyyyyyyyyy
 app = Flask(__name__)
 
-commments = [
-    ["comment", "file"]
-]
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
