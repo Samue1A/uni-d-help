@@ -7,7 +7,6 @@ import csv
 import config
 # from docx import Document
 
-
 from sumy.parsers.html import HtmlParser
 from sumy.parsers.plaintext import PlaintextParser
 from sumy.nlp.tokenizers import Tokenizer
