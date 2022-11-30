@@ -382,7 +382,8 @@ def greet():
         a = ScrapGoogle(uni, '+university+acceptance+rate').split('All results')[-1]
         a = a.split('%')[0]
         a = a.strip() + '%'
-        for item in (a.split('. ')):
+        a = a.split('. ')
+        for item in (a):
             if '%' in item:
                 useStuffHead.append("Acceptance Rate")
                 useStuff.append(a)
