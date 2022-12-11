@@ -8,7 +8,6 @@ import config  #---> c'est le API key du Yelp api
 # from docx import Document
 
 
-
 from sumy.parsers.html import HtmlParser
 from sumy.parsers.plaintext import PlaintextParser
 from sumy.nlp.tokenizers import Tokenizer
@@ -369,10 +368,11 @@ def ussearch():
     useStuffHead = []
     useStuff = []
     for item in list(all_text):
-        headers.append(item[1].replace("+", " ").capitalize())
+        if item:
+            headers.append(item[1].replace("+", " ").capitalize())
 
-        text.append(item[0])
-        links.append(item[-1])
+            text.append(item[0])
+            links.append(item[-1])
     
     # doc = MakeDoc(headers, text, useStuff, useStuffHead, uni, 'US')
     # useStuffHead.append("Document")
