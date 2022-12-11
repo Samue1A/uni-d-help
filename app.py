@@ -193,7 +193,7 @@ def filterLink(links, country='us'):
                     return item
 
 
-def DoForEach(university, SENTENCES_COUNT, list=['needed grades', 'application', 'cost'], country='US'):
+def DoForEach(university, SENTENCES_COUNT, list=['needed grades', 'undergraduate application', 'undergraduate cost'], country='US'):
     returnn = []
     for item in list:
         if ' ' in item:
