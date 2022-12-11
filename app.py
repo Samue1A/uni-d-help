@@ -7,6 +7,7 @@ import csv
 import config  #---> c'est le API key du Yelp api
 # from docx import Document
 
+
 from sumy.parsers.html import HtmlParser
 from sumy.parsers.plaintext import PlaintextParser
 from sumy.nlp.tokenizers import Tokenizer
@@ -107,19 +108,15 @@ def PyYelp(location):
 def isfloat(num):
     try:
         float(num)
-        return True
-    except ValueError:
+        if '.' in num:
+            return True
         return False
-
-def isint(num):
-    try:
-        int(num)
-        return True
     except ValueError:
         return False
 
 def GetText(link, look_at, SENTENCES_COUNT, country, university):
     url = link.split('%')[0]
+    print(url)
     parser = HtmlParser.from_url(url, Tokenizer(LANGUAGE))
     stemmer = Stemmer(LANGUAGE)
 
@@ -131,7 +128,7 @@ def GetText(link, look_at, SENTENCES_COUNT, country, university):
         a = a.split('All results')[-1]
         a = (a.split('. ')[0].strip() + '.').split(' ')
         for index, item in enumerate(a):
-            if isfloat(item.strip(".")) or isint(item.strip(".")):
+            if isfloat(item.strip(".")):
                 a[index] += f' (or {round(float(item.strip("."))*5, 2)}/20 in france)'
                 a = ' '.join(a)      
                 final.append(str(a))
@@ -140,6 +137,7 @@ def GetText(link, look_at, SENTENCES_COUNT, country, university):
     for sentence in summarizer(parser.document, SENTENCES_COUNT):
         final.append(sentence)
     final = list(dict.fromkeys(final))
+    final = list(final)
     return final, look_at, url
 
 
@@ -338,7 +336,7 @@ def admin():
 
 
 @app.route('/ussearch')
-def greet():
+def ussearch():
     uni = request.args.get("name").capitalize()
     listy = request.args.getlist("listy")
     SENTENCES_COUNT = request.args.get("lines")
@@ -382,8 +380,8 @@ def greet():
         a = ScrapGoogle(uni, '+university+acceptance+rate').split('All results')[-1]
         a = a.split('%')[0]
         a = a.strip() + '%'
-        a = a.split('. ')
-        for item in (a):
+        a = a.replace('\\', '. ').replace('//', '. ')
+        for item in (a.split('. ')):
             if '%' in item:
                 useStuffHead.append("Acceptance Rate")
                 useStuff.append(a)
