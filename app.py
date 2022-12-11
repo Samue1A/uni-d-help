@@ -387,7 +387,7 @@ def ussearch():
         for item in (a.split('. ')):
             if '%' in item:
                 useStuffHead.append("Acceptance Rate")
-                useStuff.append(a)
+                useStuff.append(item)
                 break
     if all['major']:
         majors = filterLink(ReturnFirstURLs(uni, 'major'), 'us')
