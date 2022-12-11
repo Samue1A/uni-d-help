@@ -115,6 +115,8 @@ def isfloat(num):
         return False
 
 def GetText(link, look_at, SENTENCES_COUNT, country, university):
+    if not link:
+        return ''
     url = link.split('%')[0]
     print(url)
     parser = HtmlParser.from_url(url, Tokenizer(LANGUAGE))
