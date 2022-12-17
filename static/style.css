@@ -285,6 +285,16 @@ h2 {
     box-shadow: 0 0 2px 2px  #b9d3fa;
 }
 
+.degree {
+    min-width: 15vw;
+    padding: 0.8rem;
+    margin: 0.5rem;
+    border: 0;
+    margin: 1vw;
+    font-size: 120%;
+    border-radius: 10px;
+}
+
 .btns {
     margin-top: 5rem;
     color: white;

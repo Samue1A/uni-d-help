@@ -115,6 +115,14 @@ def isfloat(num):
     except ValueError:
         return False
 
+def isnum(num):
+    num = num.replace(',', '.')   #I was in france and it only works with this cuz yh
+    try:
+        float(num)
+        return True
+    except ValueError:
+        return False
+
 def GetText(link, look_at, SENTENCES_COUNT, country, university):
     if not link:
         return ''
@@ -171,9 +179,9 @@ def tag_visible(element):
 
 LANGUAGE = "english"
 
-def ReturnFirstURLs(university, item):
+def ReturnFirstURLs(university, degree, item):
     URLs = []
-    url = 'https://www.google.com/search?q=' + university + '+' + item
+    url = 'https://www.google.com/search?q=' + university + '+' + degree + '+' + item
     headers = {"User-Agent": "Mozilla/5.0"}
     cookies = {"CONSENT": "YES+cb.20210720-07-p0.en+FX+410"}
     request_result = requests.get(url, headers=headers, cookies=cookies)
@@ -194,15 +202,15 @@ def filterLink(links, country='us'):
                     return item
 
 
-def DoForEach(university, SENTENCES_COUNT, list=['needed grades', 'undergraduate application', 'undergraduate cost'], country='US'):
+def DoForEach(university, degree, SENTENCES_COUNT, list=['needed grades', 'undergraduate application', 'undergraduate cost'], country='US'):
     returnn = []
     for item in list:
         if ' ' in item:
             item = '+'.join(item.split(' '))
         if country == 'UK':
-            returnn.append(GetText(filterLink(ReturnFirstURLs(university, item), 'uk'), item, SENTENCES_COUNT, country, university))
+            returnn.append(GetText(filterLink(ReturnFirstURLs(university, degree, item), 'uk'), item, SENTENCES_COUNT, country, university))
         else:
-            returnn.append(GetText(filterLink(ReturnFirstURLs(university, item)), item, SENTENCES_COUNT, country, university))
+            returnn.append(GetText(filterLink(ReturnFirstURLs(university, degree, item)), item, SENTENCES_COUNT, country, university))
     return returnn
 
 
@@ -257,6 +265,7 @@ def uksearch():
     uni = request.args.get("name").capitalize()
     listy = request.args.getlist("listy")
     SENTENCES_COUNT = request.args.get("lines")
+    degree = request.args.get("degree")
 
     if not SENTENCES_COUNT:
         SENTENCES_COUNT = 10
@@ -273,7 +282,7 @@ def uksearch():
             all[item] = True
 
 
-    all_text = list(DoForEach(uni, SENTENCES_COUNT, listy, 'UK'))
+    all_text = list(DoForEach(uni, degree, SENTENCES_COUNT, listy, 'UK'))
 
     links = []
     headers = []
@@ -293,7 +302,7 @@ def uksearch():
         useStuffHead.append("Acceptance Rate")
         useStuff.append(a)
     if all['major']:
-        majors = filterLink(ReturnFirstURLs(uni, 'major'), 'uk')
+        majors = filterLink(ReturnFirstURLs(uni, degree, 'major'), 'uk')
         useStuffHead.append("Subjects")
         useStuff.append(majors)
     if all['sources']:
@@ -342,6 +351,7 @@ def admin():
 def ussearch():
     uni = request.args.get("name").capitalize()
     listy = request.args.getlist("listy")
+    degree = request.args.get("degree")
     SENTENCES_COUNT = request.args.get("lines")
 
     if not SENTENCES_COUNT:
@@ -361,7 +371,7 @@ def ussearch():
             all[item] = True
 
 
-    all_text = list(DoForEach(uni, SENTENCES_COUNT, listy, 'US'))
+    all_text = list(DoForEach(uni, degree, SENTENCES_COUNT, listy, 'US'))
 
     links = []
     headers = []
@@ -382,16 +392,25 @@ def ussearch():
 
     if all['acceptance rate']:
         a = ScrapGoogle(uni, '+university+acceptance+rate').split('All results')[-1]
-        a = a.split('%')[0]
-        a = a.strip() + '%'
-        a = a.replace('\\', '. ').replace('//', '. ')
-        for item in (a.split('. ')):
-            if '%' in item:
-                useStuffHead.append("Acceptance Rate")
-                useStuff.append(item)
+        for a_index, item in enumerate(a):
+                # a.remove('%')
+                # for num in a.split(' '):
+                #     if isfloat(num):
+                #         useStuffHead.append("Acceptance Rate")
+                #         useStuff.append(f'The acceptance rate for {uni} is {num}%')
+            if item == '%':
+                for ind in range(5):
+                    slice = a[(a_index-5+ind):(a_index)]
+                    print(slice)
+                    if isnum(slice):
+                        useStuffHead.append("Acceptance Rate")
+                        useStuff.append(f'The acceptance rate for {uni} is {slice}%')
+                        break
                 break
+
+
     if all['major']:
-        majors = filterLink(ReturnFirstURLs(uni, 'major'), 'us')
+        majors = filterLink(ReturnFirstURLs(uni, degree, 'major'), 'us')
         useStuffHead.append("Majors")
         useStuff.append(majors)
     if all['deadline']:
