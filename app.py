@@ -350,9 +350,11 @@ def uksearch():
         useStuffHead.append("Sources")
         useStuff.append(links)
     
+    print(useStuff)
+    print('----------------------------')
+    print(useStuffHead)
 
-
-    return render_template('greet.html', text=text, headers=headers, country='US', uni=uni, useStuff=useStuff, useStuffHead=useStuffHead)
+    return render_template('greet.html', text=text, headers=headers, country='UK', uni=uni, useStuff=useStuff, useStuffHead=useStuffHead)
 
 
 
