@@ -144,12 +144,13 @@ def GetText(link, look_at, SENTENCES_COUNT, country, university):
                 a = ' '.join(a)      
                 final.append(str(a))
                 break
-    
-    for sentence in summarizer(parser.document, SENTENCES_COUNT):
-        final.append(sentence)
-    final = list(dict.fromkeys(final))
-    final = list(final)
-    return final, look_at, url
+    if summarizer(parser.document, SENTENCES_COUNT):
+        for sentence in summarizer(parser.document, SENTENCES_COUNT):
+            final.append(sentence)
+        final = list(dict.fromkeys(final))
+        final = list(final)
+        return final, look_at, url
+    return 0
 
 
 
@@ -175,6 +176,24 @@ def tag_visible(element):
         return False
     return True
 
+def bold(element):
+    if not element.parent.name in ['b']:
+        return False
+    if isinstance(element, Comment):
+        return False
+    return True
+
+def opendayuk(uni):
+    url = 'https://www.google.com/search?q=' + uni + '+uk+open+day+'
+    headers = {"User-Agent": "Mozilla/5.0"}
+    cookies = {"CONSENT": "YES+cb.20210720-07-p0.en+FX+410"}
+    request_result = requests.get(url, headers=headers, cookies=cookies)
+    soup = bs4.BeautifulSoup(request_result.text, "html.parser")
+    soup = soup.find('div', {'class': 'taw'}).contents[-1].strip()
+    texts = soup.findAll(text=True)
+    visible_texts = filter(bold, texts)  
+    return u" ".join(t.strip() for t in visible_texts)
+
 
 
 LANGUAGE = "english"
@@ -198,7 +217,8 @@ def filterLink(links, country='us'):
                 if '.edu' in item and (not 'default/files/styles/' in item) and (not '.png' in item):
                     return item
             else:
-                if '.ac.uk' in item and (not 'default/files/styles/' in item) and (not '.png' in item):
+                if '.ac.uk' in item and (not 'default/files/styles/' in item) and (not '.png' in item) and (not 'images' in item.lower()):
+                    print(item)
                     return item
 
 
@@ -275,7 +295,8 @@ def uksearch():
         'sources': False,
         'acceptance rate': False,
         'location': False,
-        'deadline': False
+        'deadline': False,
+        'openday': False
     }
 
     for item in all:
@@ -310,6 +331,7 @@ def uksearch():
                     slice = a[(a_index-5+ind):(a_index)]
                     print(slice)
                     if isnum(slice):
+                        slice = slice.replace('-', '')
                         useStuffHead.append("Acceptance Rate")
                         useStuff.append(f'The acceptance rate for {uni} is {slice}%')
                         break
@@ -343,9 +365,21 @@ def uksearch():
                 useStuff.append(nearYou)
                 useStuffHead.append("Location")
                 useStuff.append(senty)
-
-
                 break
+    l = 0
+    if all['openday']:
+        openday = ScrapGoogle(uni, '+uk+university+open+day').replace(' - ', '. ').split('. ')
+        print(openday)
+        for sentence in openday:
+            for word in sentence.split(' '):
+                if isnum(word) and int(word) < 32:
+                    useStuffHead.append("Open Day")
+                    useStuff.append(sentence.split('All results')[-1])
+                    l = 1
+                    break
+            if l ==1:
+                break
+
     if all['sources']:
         useStuffHead.append("Sources")
         useStuff.append(links)
@@ -443,9 +477,10 @@ def ussearch():
                 #         useStuff.append(f'The acceptance rate for {uni} is {num}%')
             if item == '%':
                 for ind in range(5):
-                    slice = a[(a_index-5+ind):(a_index)]
+                    slice = (a[(a_index-5+ind):(a_index)])
                     print(slice)
                     if isnum(slice):
+                        slice = slice.replace('-', '')
                         useStuffHead.append("Acceptance Rate")
                         useStuff.append(f'The acceptance rate for {uni} is {slice}%')
                         break
