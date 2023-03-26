@@ -231,7 +231,7 @@ def DoForEach(university, degree, SENTENCES_COUNT, list=['needed grades', 'under
             returnn.append(GetText(filterLink(ReturnFirstURLs(university, degree, item, country), country), item, SENTENCES_COUNT, country, university))
         else:
             returnn.append(GetText(filterLink(ReturnFirstURLs(university, degree, item)), item, SENTENCES_COUNT, country, university))
-    return returnn
+    return returnn, list
 
 
 
@@ -305,16 +305,17 @@ def uksearch():
             all[item] = True
 
 
-    all_text = list(DoForEach(uni, degree, SENTENCES_COUNT, listy, 'UK'))
+    all_text = DoForEach(uni, degree, SENTENCES_COUNT, listy, 'UK')
+    headers = [item.capitalize() for item in all_text[1]]
+    all_text = list(all_text[0])
 
     links = []
-    headers = []
     text = []
     useStuffHead = []
     useStuff = []
     for item in list(all_text):
-        headers.append(str(item[1]).replace("+", " ").capitalize())
-
+        print(all_text)
+        print(headers)
         text.append(item[0])
         links.append(item[-1])
     
