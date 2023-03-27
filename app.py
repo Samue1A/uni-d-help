@@ -456,7 +456,7 @@ def ussearch():
     useStuff = []
     print(all_text)
     for item in all_text:
-        if item:
+        if item and not isnum(item):
             print(item)
             print(f'item 1: {item[0]}')
             print(f'item 2: {item[1]}')
