@@ -313,9 +313,6 @@ def uksearch():
     useStuff = []
     headers = []
     for item in all_text:
-        print(f'item 1: {item[0]}')
-        print(f'item 2: {item[1]}')
-        print(f'item 3: {item[-1]}')
         headers.append(item[1].replace("+", " ").capitalize())
         text.append(item[0])
         links.append(item[-1])
