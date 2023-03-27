@@ -291,7 +291,7 @@ def uksearch():
         SENTENCES_COUNT = 10
     
     all = {
-        'major': False,
+        'courses': False,
         'sources': False,
         'acceptance rate': False,
         'location': False,
@@ -305,19 +305,18 @@ def uksearch():
             all[item] = True
 
 
-    all_text = DoForEach(uni, degree, SENTENCES_COUNT, listy, 'UK')
-    headers = [item.capitalize() for item in all_text[1]]
-    all_text = list(all_text[0])
+    all_text = DoForEach(uni, degree, SENTENCES_COUNT, listy, 'UK')[0]
 
     links = []
     text = []
     useStuffHead = []
     useStuff = []
-    for item in list(all_text):
-        print(all_text)
-        print(headers)
-        print("------------------")
-        print(item)
+    headers = []
+    for item in all_text:
+        print(f'item 1: {item[0]}')
+        print(f'item 2: {item[1]}')
+        print(f'item 3: {item[-1]}')
+        headers.append(item[1].replace("+", " ").capitalize())
         text.append(item[0])
         links.append(item[-1])
     
@@ -341,10 +340,10 @@ def uksearch():
                 break
 
 
-    if all['major']:
-        majors = filterLink(ReturnFirstURLs(uni, degree, 'major'), 'uk')
-        useStuffHead.append("Majors")
-        useStuff.append(majors)
+    if all['courses']:
+        courses = filterLink(ReturnFirstURLs(uni, degree, 'courses'), 'uk')
+        useStuffHead.append("Courses")
+        useStuff.append(courses)
     if all['deadline']:
         try:
             try:
@@ -375,7 +374,7 @@ def uksearch():
         print(openday)
         for sentence in openday:
             for word in sentence.split(' '):
-                if isnum(word) and int(word) < 32:
+                if isnum(word) and int(word.replace(',', '')) < 32:
                     useStuffHead.append("Open Day")
                     useStuff.append(sentence.split('All results')[-1])
                     l = 1
@@ -451,15 +450,19 @@ def ussearch():
             all[item] = True
 
 
-    all_text = list(DoForEach(uni, degree, SENTENCES_COUNT, listy, 'US'))
+    all_text = DoForEach(uni, degree, SENTENCES_COUNT, listy, 'US')[0]
 
     links = []
     headers = []
     text = []
     useStuffHead = []
     useStuff = []
-    for item in list(all_text):
+    print(all_text)
+    for item in all_text:
         if item:
+            print(f'item 1: {item[0]}')
+            print(f'item 2: {item[1]}')
+            print(f'item 3: {item[-1]}')
             headers.append(item[1].replace("+", " ").capitalize())
 
             text.append(item[0])
