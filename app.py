@@ -313,9 +313,11 @@ def uksearch():
     text = []
     useStuffHead = []
     useStuff = []
-    for item in all_text:
+    for item in list(all_text):
         print(all_text)
         print(headers)
+        print("------------------")
+        print(item)
         text.append(item[0])
         links.append(item[-1])
     
