@@ -283,6 +283,8 @@ def index():
 @app.route('/uksearch', methods=['GET', 'POST'])
 def uksearch():
     uni = request.args.get("name").capitalize()
+    if uni.lower() == 'imperial':
+        uni = 'Imperial College'
     listy = request.args.getlist("listy")
     SENTENCES_COUNT = request.args.get("lines")
     degree = request.args.get("degree")
