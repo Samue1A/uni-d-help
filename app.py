@@ -313,7 +313,7 @@ def uksearch():
     text = []
     useStuffHead = []
     useStuff = []
-    for item in list(all_text):
+    for item in all_text:
         print(all_text)
         print(headers)
         text.append(item[0])
