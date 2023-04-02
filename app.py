@@ -484,6 +484,7 @@ def ussearch():
 
     if all['acceptance rate']:
         a = ScrapGoogle(uni, '+university+acceptance+rate').split('All results')[-1]
+        print(a)
         for a_index, item in enumerate(a):
                 # a.remove('%')
                 # for num in a.split(' '):
@@ -510,6 +511,7 @@ def ussearch():
         try:
             try:
                 deadline = ScrapGoogle(uni, '+university+application+deadline+date', 2).split('\n\n')[1]
+                print(deadline)
                 deadline = adFilter(check(deadline.replace('. ', ' .').replace('?', ' .').replace('›', ' .').replace('...', ' .').split(' .')).strip()).replace('\n', ' ') 
             except:
                 deadline = ScrapGoogle(uni, '+university+application+deadline+date', 2).split('Verbatim')[1]
