@@ -510,12 +510,12 @@ def ussearch():
         useStuff.append(majors)
     if all['deadline']:
         l=0
-        deadline = ScrapGoogle(uni, '+university+application+deadline+date', 2).split('All results')[-1].replace('-', '.').replace('›', '.').split('.')
+        deadline = ScrapGoogle(uni, '+university+application+deadline+date', 2).split('All results')[-1].split('Verbatim')[-1].replace('- ', '.').replace('›', '.').split('.')
         for sentence in deadline:
             for word in sentence.split(' '):
                 if isnum(word) and int(word.replace(',', '')) < 32:
                     useStuffHead.append("Deadline")
-                    useStuff.append(sentence.split('All results')[-1])
+                    useStuff.append(sentence)
                     l = 1
                     break
             if l ==1:
