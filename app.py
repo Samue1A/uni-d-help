@@ -509,21 +509,18 @@ def ussearch():
         useStuffHead.append("Majors")
         useStuff.append(majors)
     if all['deadline']:
-        try:
-            try:
-                deadline = ScrapGoogle(uni, '+university+application+deadline+date', 2).split('\n\n')[1]
-                print(deadline)
-                deadline = adFilter(check(deadline.replace('. ', ' .').replace('?', ' .').replace('›', ' .').replace('...', ' .').split(' .')).strip()).replace('\n', ' ') 
-            except:
-                deadline = ScrapGoogle(uni, '+university+application+deadline+date', 2).split('Verbatim')[1]
-                print(deadline)
-                deadline = adFilter(check(deadline.replace('. ', ' .').replace('?', ' .').replace('›', ' .').replace('...', ' .').split(' .')).strip()).replace('\n', ' ') 
-            if deadline[-1] != '.':
-                deadline += '.'
-            useStuffHead.append('Deadline')
-            useStuff.append(deadline)
-        except:
-            pass
+        l=0
+        deadline = ScrapGoogle(uni, '+university+application+deadline+date', 2).split('All results')[-1]replace('-', '.').replace('›', '.').split('.')
+        for sentence in deadline:
+            for word in sentence.split(' '):
+                if isnum(word) and int(word.replace(',', '')) < 32:
+                    useStuffHead.append("Deadline")
+                    useStuff.append(sentence.split('All results')[-1])
+                    l = 1
+                    break
+            if l ==1:
+                break
+        
     if all['location']:
         z = ScrapGoogle(uni, '+university+location').split('All results')[-1].split('- Wikipedia')[0].split('See results')[0].replace('›', '.').replace('|', '.').replace('/', '').replace('\\', '').split('.')
         for senty in z:   
