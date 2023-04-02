@@ -115,12 +115,11 @@ def isfloat(num):
     except ValueError:
         return False
 
-def isnum(num):
-    num = num.replace(',', '.')   #I was in france and it only works with this cuz yh
+def isnum(num)
     try:
         float(num)
         return True
-    except ValueError:
+    except:
         return False
 
 def GetText(link, look_at, SENTENCES_COUNT, country, university):
@@ -150,7 +149,7 @@ def GetText(link, look_at, SENTENCES_COUNT, country, university):
         final = list(dict.fromkeys(final))
         final = list(final)
         return final, look_at, url
-    return 0
+    return False
 
 
 
@@ -228,10 +227,14 @@ def DoForEach(university, degree, SENTENCES_COUNT, list=['needed grades', 'under
         if ' ' in item:
             item = '+'.join(item.split(' '))
         if country == 'UK':
-            returnn.append(GetText(filterLink(ReturnFirstURLs(university, degree, item, country), country), item, SENTENCES_COUNT, country, university))
+            l = GetText(filterLink(ReturnFirstURLs(university, degree, item, country), country), item, SENTENCES_COUNT, country, university)
+            if l:
+                returnn.append(l)
         else:
-            returnn.append(GetText(filterLink(ReturnFirstURLs(university, degree, item)), item, SENTENCES_COUNT, country, university))
-    return returnn, list
+            l = GetText(filterLink(ReturnFirstURLs(university, degree, item)), item, SENTENCES_COUNT, country, university)
+            if l:
+                returnn.append(l)
+    return returnn
 
 
 
@@ -306,8 +309,12 @@ def uksearch():
             listy.remove(item)
             all[item] = True
 
-
-    all_text = DoForEach(uni, degree, SENTENCES_COUNT, listy, 'UK')[0]
+    all_text = DoForEach(uni, degree, SENTENCES_COUNT, listy, 'UK')
+    print(all_text)
+    if all_text[0] == all_text[-1]:
+        all_text = all_text[0]
+        print('1st')
+    
 
     links = []
     text = []
@@ -449,7 +456,9 @@ def ussearch():
             all[item] = True
 
 
-    all_text = DoForEach(uni, degree, SENTENCES_COUNT, listy, 'US')[0]
+    all_text = DoForEach(uni, degree, SENTENCES_COUNT, listy, 'US')
+    if len(all_text) == 1:
+        all_text = all_text[0]
 
     links = []
     headers = []
@@ -531,3 +540,18 @@ def ussearch():
 
 
     return render_template('greet.html', text=text, headers=headers, country='US', uni=uni, useStuff=useStuff, useStuffHead=useStuffHead)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

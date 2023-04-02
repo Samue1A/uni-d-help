@@ -97,6 +97,43 @@
   box-shadow: 1.9vw 1.9vw blue;
 }
 
+
+
+@keyframes shadowpink {
+    0% {
+        box-shadow: 0vw 0vw pink;
+    }
+    100% {
+        box-shadow: 1.9vw 1.9vw pink;
+    }
+}
+
+@keyframes shadowred {
+    0% {
+        box-shadow: 0vw 0vw red;
+    }
+    100% {
+        box-shadow: 1.9vw 1.9vw red;
+    }
+}
+
+
+
+#oxford:hover {
+    animation-name: shadowred;
+    animation-duration: 0.5s;
+    transition-timing-function: ease-in;
+    box-shadow: 1.9vw 1.9vw red;
+  }
+
+#ucl:hover {
+  animation-name: shadowpink;
+  animation-duration: 0.5s;
+  transition-timing-function: ease-in;
+  box-shadow: 1.9vw 1.9vw pink;
+}
+
+
 .normal {
     font-size: 100%;
 }
@@ -232,6 +269,38 @@ h2 {
             background-image: url(imgs/naassom-azevedo-Q_Sei-TqSlc-unsplash.jpg);
         }
     }
+    
+    @keyframes shadowred {
+        0% {
+            box-shadow: 0vw 0vw red;
+        }
+        100% {
+            box-shadow: 2.5vw 2.5vw red;
+        }
+    }
+
+    @keyframes shadowpink {
+        0% {
+            box-shadow: 0vw 0vw pink;
+        }
+        100% {
+            box-shadow: 2.5vw 2.5vw pink;
+        }
+    }
+
+    #oxford:hover {
+        animation-name: shadowred;
+        animation-duration: 0.5s;
+        transition-timing-function: ease-in;
+        box-shadow: 2.5vw 2.5vw red;
+    }
+
+    #ucl:hover {
+    animation-name: shadowpink;
+    animation-duration: 0.5s;
+    transition-timing-function: ease-in;
+    box-shadow: 2.5vw 2.5vw pink;
+    }
 }
 
 #cambridge {
@@ -240,6 +309,15 @@ h2 {
 
 #imperial {
     background-image: url(imgs/imperial.png);
+}
+
+#ucl {
+    background-image: url(imgs/ucl.png);
+    object-fit: contain;
+}
+
+#oxford {
+    background-image: url(imgs/oxford.png);
 }
 
 .hide {
@@ -325,7 +403,7 @@ h2 {
     }
 }
 
-#uk {
+#us {
     display: none;
 }
 
