@@ -328,6 +328,7 @@ def uksearch():
     
     if all['acceptance rate']:
         a = ScrapGoogle(uni, '+uk+university+acceptance+rate').split('All results')[-1]
+        a = a.split('MIT admissions is extremely selective with an acceptance rate of 7% . Students that get into MIT have an average SAT score between 1510-1580 or an average ACT score of 34-36. Massachusetts Institute of Technology Admissions - Niche www.niche.com › ')[-1]
         for a_index, item in enumerate(a):
                 # a.remove('%')
                 # for num in a.split(' '):
@@ -515,6 +516,7 @@ def ussearch():
                 deadline = adFilter(check(deadline.replace('. ', ' .').replace('?', ' .').replace('›', ' .').replace('...', ' .').split(' .')).strip()).replace('\n', ' ') 
             except:
                 deadline = ScrapGoogle(uni, '+university+application+deadline+date', 2).split('Verbatim')[1]
+                print(deadline)
                 deadline = adFilter(check(deadline.replace('. ', ' .').replace('?', ' .').replace('›', ' .').replace('...', ' .').split(' .')).strip()).replace('\n', ' ') 
             if deadline[-1] != '.':
                 deadline += '.'
