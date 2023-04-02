@@ -115,7 +115,7 @@ def isfloat(num):
     except ValueError:
         return False
 
-def isnum(num)
+def isnum(num):
     try:
         float(num)
         return True
