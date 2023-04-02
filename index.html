@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Do you need help with university research">
+    
+    <link rel="stylesheet" href="../static/style.css">
+    <link rel="stylesheet" href="../static/default.css">
+    <link rel="stylesheet" href="../static/extra.css">
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+    <title>UNI d help</title>
+    <script>
+        function bobuk() {
+            if (document.querySelector('#hideuk').style.display === "flex") {
+                document.querySelector('#hideuk').style.display = "none";
+            }
+            else {
+                document.querySelector('#hideuk').style.display = "flex";
+            }
+        }
+        function uk() {
+            document.querySelector('#uk').style.display = "flex";
+            document.querySelector('#us').style.display = "none";
+        }
+        function us() {
+            document.querySelector('#us').style.display = "flex";
+            document.querySelector('#uk').style.display = "none";
+        }
+        function bob() {
+            if (document.querySelector('#hideus').style.display === "flex") {
+                document.querySelector('#hideus').style.display = "none";
+            }
+            else {
+                document.querySelector('#hideus').style.display = "flex";
+            }
+        }
+    </script>
+</head>
+<body>
+    <nav class="nav_bar collapsible">
+        <div>
+            <svg class="icon_nav" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Pro 6.1.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M416 96H32C14.33 96 0 81.67 0 64C0 46.33 14.33 32 32 32H416C433.7 32 448 46.33 448 64C448 81.67 433.7 96 416 96zM416 352H32C14.33 352 0 337.7 0 320C0 302.3 14.33 288 32 288H416C433.7 288 448 302.3 448 320C448 337.7 433.7 352 416 352zM0 192C0 174.3 14.33 160 32 160H416C433.7 160 448 174.3 448 192C448 209.7 433.7 224 416 224H32C14.33 224 0 209.7 0 192zM416 480H32C14.33 480 0 465.7 0 448C0 430.3 14.33 416 32 416H416C433.7 416 448 430.3 448 448C448 465.7 433.7 480 416 480z"/></svg>
+        </div>
+        <ul class="nav_items collapsible__content">
+            <li class="nav_item"><button onclick="uk()" class="backblack"><a href="#">UK</a></button></li>
+            <li class="nav_item"><button onclick="us()" class="backblack"><a href="#">US</a></button></li>
+            <li class="nav_item"><a href="mailto:samuelswebsite.email@gmail.com">Email me</a></li>
+        </ul>
+    </nav>
+    <p><br><br></p>
+
+    
+    <div class="main">
+        <p><br><br><br><br><br><br></p>
+        <form id="uk" action="/uksearch" method="get" class="input-group">
+            <button onclick="bobuk()" type="button" id="blue" class="btn btn--accent"><svg class="icon_search" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Pro 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M64 144c26.5 0 48-21.5 48-48s-21.5-48-48-48S16 69.5 16 96s21.5 48 48 48zM192 64c-17.7 0-32 14.3-32 32s14.3 32 32 32H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H192zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H192zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H192zM64 464c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm48-208c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48z"/></svg></button>
+                <div class="hide" id="hideuk">
+                    <div class="checkboxes">
+                        <div class="check">
+                            <input checked type="checkbox" value='needed grades' name="listy" id="box1">
+                            <label for="box1">needed grades</label>
+                        </div>
+                        <div class="check">
+                            <input checked type="checkbox" value="application" name="listy" id="box1">
+                            <label for="box1">application</label>
+                        </div>
+                        <div class="check">
+                            <input checked value="cost" type="checkbox" name="listy" id="box1">
+                            <label for="box1">cost</label>
+                        </div>
+                        <div class="check">
+                            <input checked value="courses" type="checkbox" name="listy" id="box1">
+                            <label for="box1">Courses</label>
+                        </div>
+                        <div class="check">
+                            <input checked value="acceptance rate" type="checkbox" name="listy" id="box1">
+                            <label for="box1">acceptance rate</label>
+                        </div>
+                        <div class="check">
+                            <input checked value="location" type="checkbox" name="listy" id="box1">
+                            <label for="box1">location</label>
+                        </div>
+                        <div class="check">
+                            <input checked value="deadline" type="checkbox" name="listy" id="box1">
+                            <label for="box1">deadline</label>
+                        </div>
+                        <div class="check">
+                            <input checked value="openday" type="checkbox" name="listy" id="box1">
+                            <label for="box1">open day</label>
+                        </div>                
+                        <div class="check">
+                            <input checked value="sources" type="checkbox" name="listy" id="box1">
+                            <label for="box1">sources</label>
+                        </div>
+                    </div>
+                    <div>
+                        <select class="degree" name="degree" id="">
+                            <option value="undergraduate">Undergraduate</option>
+                            <option value="graduate">Graduate</option>
+                            <option value="bachelor's">bachelor's</option>
+                            <option value="masters">Masters</option>
+                            <option value="phd">PhD</option>
+                        </select>
+                    </div>
+                    <div class="lines">
+                        <input class="num" placeholder="max lines per section" name="lines" type="number">
+                    </div>
+                    <input class="btns" type="button" onclick="bobuk()" value="submit">
+                </div>
+                <input autocomplete="off" autofocus name="name" type="text" class="input" placeholder="enter a UK university">
+                <button type="submit" id="blue" class="btn btn--accent blue"><svg class="icon_search" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Pro 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></button>
+        </form>
+
+        <form id="us" action="/ussearch" method="get" class="input-group">
+            <button type="button" class="btn btn--accent" onclick="bob()"><svg class="icon_search" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Pro 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M64 144c26.5 0 48-21.5 48-48s-21.5-48-48-48S16 69.5 16 96s21.5 48 48 48zM192 64c-17.7 0-32 14.3-32 32s14.3 32 32 32H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H192zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H192zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H192zM64 464c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm48-208c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48z"/></svg></button>
+                <div class="hide" id="hideus">
+                    <div class="checkboxes">
+                        <div class="check">
+                            <input checked type="checkbox" value='needed grades' name="listy" id="box1">
+                            <label for="box1">needed grades</label>
+                        </div>
+                        <div class="check">
+                            <input checked type="checkbox" value="application" name="listy" id="box1">
+                            <label for="box1">application</label>
+                        </div>
+                        <div class="check">
+                            <input checked value="cost" type="checkbox" name="listy" id="box1">
+                            <label for="box1">cost</label>
+                        </div>
+                        <div class="check">
+                            <input checked value="major" type="checkbox" name="listy" id="box1">
+                            <label for="box1">major</label>
+                        </div>
+                        <div class="check">
+                            <input checked value="acceptance rate" type="checkbox" name="listy" id="box1">
+                            <label for="box1">acceptance rate</label>
+                        </div>
+                        <div class="check">
+                            <input checked value="location" type="checkbox" name="listy" id="box1">
+                            <label for="box1">location</label>
+                        </div>
+                        <div class="check">
+                            <input checked value="deadline" type="checkbox" name="listy" id="box1">
+                            <label for="box1">deadline</label>
+                        </div>               
+                        <div class="check">
+                            <input checked value="sources" type="checkbox" name="listy" id="box1">
+                            <label for="box1">sources</label>
+                        </div>
+                    </div>
+                    <div>
+                        <select class="degree" name="degree" id="">
+                            <option value="undergraduate">Undergraduate</option>
+                            <option value="graduate">Graduate</option>
+                            <option value="bachelor's">bachelor's</option>
+                            <option value="masters">Masters</option>
+                            <option value="phd">PhD</option>
+                        </select>
+                    </div>
+                    <input class="num" placeholder="max lines per section" name="lines" type="number">
+                    <input class="btns" type="button" onclick="bob()" value="submit">
+
+                </div>
+                <input autocomplete="off" autofocus name="name" type="text" class="input" placeholder="enter a US university">
+                <button type="submit" class="btn btn--accent"><svg class="icon_search" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Pro 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></button>
+        </form>
+                
+
+
+        <p class="explaination">
+            Lookup any university and we will automatically generate a document with usefull information. Feel free to submit any research you made yourself in the footer. It would help us a lot!
+        </p>
+        <p><br><br></p>
+    </div>
+
+    <h2>Biggest Universities</h2>
+
+    <div class="grid">
+        <a class="box" href="https://docs.google.com/document/d/1Sa8pUE-uk4-cTUn3WYvv2lAMCnMdlCp0vJinmG3ur1M/edit?usp=sharing">
+            <div class="boux" id="cambridge" data-aos="zoom-in-up">
+                <p class="text">Cambridge University</p>   
+            </div>
+        </a>
+        <a class="box" href="https://docs.google.com/document/d/1s0kKVZ9Bqz9-HYc41Qa0aiGONJI1V2VgMEfgB0cgNCg/edit?usp=sharing">
+            <div class="boux" id="imperial" data-aos="zoom-in-up">
+                <p class="text">Imperial College</p>
+            </div>
+        </a>
+        <a class="box" href="https://docs.google.com/document/d/14iFk7PZ2Z5Q1GeeUGs4JO-Ni-3V068PmCJ7FDRBHA6I/edit?usp=sharing">
+            <div class="boux" id="ucl" data-aos="zoom-in-up">
+                <p class="text">UCL</p>
+            </div>
+        </a>
+        <a class="box" href="https://docs.google.com/document/d/10Tl9ntStNs2t9hj1EIFspG3kWAWQNbTkCclm62iZsGk/edit?usp=sharing">
+            <div class="boux" id="oxford" data-aos="zoom-in-up">
+                <p class="text">Oxford University</p>
+            </div>
+        </a>
+    </div>     
+
+    <footer class="footer">
+        <div class="footer_1">
+            <div class="foots"><a class="normal" href="https://www.samuelsweb.com/">Samuel Aron</a></div>
+            <div class="foots">Copyright &copy; 2022</div>
+            <div class="foots">October 31, 2022</div>
+        </div>
+        <form action="/" method="POST" class="footer_2">
+            <textarea name="comment" class="footer_input" placeholder="make a suggestion or comment" name="comments" id="" cols="50" rows="6"></textarea>
+            <input placeholder="document url" name="fil" type="url" class="footer_input" id="file">
+            <button id="btnn" type="submit">Submit</button>
+        </form>
+    </footer>
+    <script src="../static/main.js"></script>
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script>
+      AOS.init();
+    </script>
+</body>
+</html>
