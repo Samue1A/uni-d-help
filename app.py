@@ -157,7 +157,7 @@ def GetText(link, look_at, SENTENCES_COUNT, country, university):
 def ScrapGoogle(university, message, num=1):
     url = 'https://www.google.com/search?q=' + university + message
     headers = {"User-Agent": "Mozilla/5.0"}
-    cookies = {"CONSENT": "YES+cb.20210720-07-p0.en+FX+410"}
+    cookies = {"CONSENT": "YES+cb.2023110-07-p0.en+FX+410"}
     request_result = requests.get(url, headers=headers, cookies=cookies)
     soup = bs4.BeautifulSoup(request_result.text, "html.parser")
     texts = soup.findAll(text=True)
@@ -185,7 +185,7 @@ def bold(element):
 def opendayuk(uni):
     url = 'https://www.google.com/search?q=' + uni + '+uk+open+day+'
     headers = {"User-Agent": "Mozilla/5.0"}
-    cookies = {"CONSENT": "YES+cb.20210720-07-p0.en+FX+410"}
+    cookies = {"CONSENT": "YES+cb.2023110-07-p0.en+FX+410"}
     request_result = requests.get(url, headers=headers, cookies=cookies)
     soup = bs4.BeautifulSoup(request_result.text, "html.parser")
     soup = soup.find('div', {'class': 'taw'}).contents[-1].strip()
@@ -201,7 +201,7 @@ def ReturnFirstURLs(university, degree, item, country='us'):
     URLs = []
     url = 'https://www.google.com/search?q=' + university + '+' + country + '+' + degree + '+' + item
     headers = {"User-Agent": "Mozilla/5.0"}
-    cookies = {"CONSENT": "YES+cb.20210720-07-p0.en+FX+410"}
+    cookies = {"CONSENT": "YES+cb.2023110-07-p0.en+FX+410"}
     request_result = requests.get(url, headers=headers, cookies=cookies)
     soup = bs4.BeautifulSoup(request_result.text, "html.parser")
     heading_object = soup.find_all( 'a')
