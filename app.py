@@ -182,8 +182,13 @@ def opendayuk(uni):
     headers = {"User-Agent": "Mozilla/5.0"}
     cookies = {"CONSENT": "YES+cb.2023110-07-p0.en+FX+410"}
     request_result = requests.get(url, headers=headers, cookies=cookies)
-    soup = bs4.BeautifulSoup(request_result.text, "html.parser")
-    return soup.text
+    soup = bs4.BeautifulSoup(request_result.text, "html.parser").text
+    openday = soup.replace(' - ', '. ').replace('›', '. ').split('. ')
+    for sentence in openday:
+        for word in sentence.split(' '):
+            if word.lower() in ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december']:
+                return sentence.split('All results')[-1].split('VerbatimOur')[-1]
+
 
 
 
@@ -369,17 +374,8 @@ def uksearch():
                 break
     l = 0
     if all['openday']:
-        openday = ScrapGoogle(uni, '+uk+university+open+day').replace(' - ', '. ').split('. ')
-        print(openday)
-        for sentence in openday:
-            for word in sentence.split(' '):
-                if isnum(word) and int(word.replace(',', '')) < 32:
-                    useStuffHead.append("Open Day")
-                    useStuff.append(sentence.split('All results')[-1])
-                    l = 1
-                    break
-            if l ==1:
-                break
+            useStuffHead.append("Open Day")
+            useStuff.append(opendayuk(uni))
 
     if all['sources']:
         useStuffHead.append("Sources")
