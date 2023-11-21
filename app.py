@@ -160,12 +160,7 @@ def ScrapGoogle(university, message, num=1):
     cookies = {"CONSENT": "YES+cb.2023110-07-p0.en+FX+410"}
     request_result = requests.get(url, headers=headers, cookies=cookies)
     soup = bs4.BeautifulSoup(request_result.text, "html.parser")
-    texts = soup.findAll(text=True)
-    if num == 1:
-        visible_texts = filter(tag_visible, texts)  
-    else:
-        visible_texts = filter(tag_visible2, texts)  
-    return u" ".join(t.strip() for t in visible_texts)
+    return soup.text
 
 
 def tag_visible(element):
@@ -188,10 +183,7 @@ def opendayuk(uni):
     cookies = {"CONSENT": "YES+cb.2023110-07-p0.en+FX+410"}
     request_result = requests.get(url, headers=headers, cookies=cookies)
     soup = bs4.BeautifulSoup(request_result.text, "html.parser")
-    soup = soup.find('div', {'class': 'taw'}).contents[-1].strip()
-    texts = soup.findAll(text=True)
-    visible_texts = filter(bold, texts)  
-    return u" ".join(t.strip() for t in visible_texts)
+    return soup.text
 
 
 
@@ -541,6 +533,19 @@ def ussearch():
 
 
     return render_template('greet.html', text=text, headers=headers, country='US', uni=uni, useStuff=useStuff, useStuffHead=useStuffHead)
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
