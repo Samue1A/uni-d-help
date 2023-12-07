@@ -6,7 +6,7 @@ from bs4.element import Comment
 import csv
 import config  #---> c'est le API key du Yelp api
 # from docx import Document
-
+from googlesearch import search
 
 
 from sumy.parsers.html import HtmlParser
@@ -123,10 +123,10 @@ def isnum(num):
         return False
 
 def GetText(link, look_at, SENTENCES_COUNT, country, university):
+
     if not link:
         return ''
     url = link.split('%')[0]
-    print(url)
     parser = HtmlParser.from_url(url, Tokenizer(LANGUAGE))
     stemmer = Stemmer(LANGUAGE)
 
@@ -143,6 +143,7 @@ def GetText(link, look_at, SENTENCES_COUNT, country, university):
                 a = ' '.join(a)      
                 final.append(str(a))
                 break
+
     if summarizer(parser.document, SENTENCES_COUNT):
         for sentence in summarizer(parser.document, SENTENCES_COUNT):
             final.append(sentence)
@@ -180,41 +181,54 @@ def bold(element):
 def opendayuk(uni):
     url = 'https://www.google.com/search?q=' + uni + '+uk+open+day+'
     headers = {"User-Agent": "Mozilla/5.0"}
-    cookies = {"CONSENT": "YES+cb.2023110-07-p0.en+FX+410"}
+    cookies = {"CONSENT": "YES+cb.20231031-07-p0.en+FX+410"}
     request_result = requests.get(url, headers=headers, cookies=cookies)
-    soup = bs4.BeautifulSoup(request_result.text, "html.parser").text
-    openday = soup.replace(' - ', '. ').replace('›', '. ').split('. ')
-    for sentence in openday:
-        for word in sentence.split(' '):
-            if word.lower() in ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december']:
-                return sentence.split('All results')[-1].split('VerbatimOur')[-1]
-
+    soup = bs4.BeautifulSoup(request_result.text, "html.parser")
+    soup = soup.find('div', {'class': 'taw'}).contents[-1].strip()
+    texts = soup.findAll(text=True)
+    visible_texts = filter(bold, texts)  
+    return u" ".join(t.strip() for t in visible_texts)
 
 
 
 LANGUAGE = "english"
 
 def ReturnFirstURLs(university, degree, item, country='us'):
+    print()
     URLs = []
-    url = 'https://www.google.com/search?q=' + university + '+' + country + '+' + degree + '+' + item
-    headers = {"User-Agent": "Mozilla/5.0"}
-    cookies = {"CONSENT": "YES+cb.2023110-07-p0.en+FX+410"}
-    request_result = requests.get(url, headers=headers, cookies=cookies)
-    soup = bs4.BeautifulSoup(request_result.text, "html.parser")
-    heading_object = soup.find_all( 'a')
-    for href in heading_object:
-        URLs.append(href.get('href').split("/url?q=")[-1].split("&")[0])
+    url = university + '+' + country + '+' + degree + '+' + item #'https://www.google.com/search?q=' + university + '+' + country + '+' + degree + '+' + item
+    # headers = {"User-Agent": "Mozilla/5.0"}
+    # cookies = {"CONSENT": "YES+cb.2023110-07-p0.en+FX+410"}
+    # request_result = requests.get(url, headers=headers, cookies=cookies)
+    # soup = bs4.BeautifulSoup(request_result.text, "html.parser")
+    # print('---------------------------------------------------------------------------------------------------')
+    # print(soup.text)
+    # print('---------------------------------------------------------------------------------------------------')
+
+    # heading_object = soup.find_all( 'a')
+    page_texts = search(url)
+    for term in page_texts:
+        URLs.append(term.split("/url?q=")[-1].split("&")[0])
+    # for href in heading_object:
+    #     URLs.append(href.get('href').split("/url?q=")[-1].split("&")[0])
+
+    print(URLs)
     return URLs
 
 def filterLink(links, country='us'):
+    print(links)
+    print(0)
     for item in links:
+        print(1)
         if 'http' in item:
             if country.lower() == 'us':
                 if '.edu' in item and (not 'default/files/styles/' in item) and (not '.png' in item):
+                    print(f'all ok filter ')
                     return item
             else:
+                print(2)
                 if '.ac.uk' in item and (not 'default/files/styles/' in item) and (not '.png' in item) and (not 'images' in item.lower()):
-                    print(item)
+                    print(f'all ok filter ')
                     return item
 
 
@@ -224,6 +238,7 @@ def DoForEach(university, degree, SENTENCES_COUNT, list=['needed grades', 'under
         if ' ' in item:
             item = '+'.join(item.split(' '))
         if country == 'UK':
+            print('in uk')
             l = GetText(filterLink(ReturnFirstURLs(university, degree, item, country), country), item, SENTENCES_COUNT, country, university)
             if l:
                 returnn.append(l)
@@ -308,6 +323,7 @@ def uksearch():
 
     all_text = DoForEach(uni, degree, SENTENCES_COUNT, listy, 'UK')
     print(all_text)
+    print('bob')
     if all_text[0] == all_text[-1]:
         all_text = all_text[0]
         print('1st')
@@ -374,8 +390,17 @@ def uksearch():
                 break
     l = 0
     if all['openday']:
-            useStuffHead.append("Open Day")
-            useStuff.append(opendayuk(uni))
+        openday = ScrapGoogle(uni, '+uk+university+open+day').replace(' - ', '. ').split('. ')
+        print(openday)
+        for sentence in openday:
+            for word in sentence.split(' '):
+                if isnum(word) and int(word.replace(',', '')) < 32:
+                    useStuffHead.append("Open Day")
+                    useStuff.append(sentence.split('All results')[-1])
+                    l = 1
+                    break
+            if l ==1:
+                break
 
     if all['sources']:
         useStuffHead.append("Sources")
@@ -529,19 +554,6 @@ def ussearch():
 
 
     return render_template('greet.html', text=text, headers=headers, country='US', uni=uni, useStuff=useStuff, useStuffHead=useStuffHead)
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
