@@ -93,7 +93,6 @@ Flask==2.3.3
 fonttools==4.40.0
 fqdn==1.5.1
 future==0.18.3
-Google-Search-API @ git+https://github.com/abenassi/Google-Search-API@546a59cc22d3260c60a2faf9afe6477168ead627
 googlesearch-python==1.2.3
 graphviz==0.20.1
 greenlet==3.0.1
