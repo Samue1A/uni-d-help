@@ -1,6 +1,6 @@
 aspose-words==22.10.0
 async-generator==1.10
-attrs==22.1.0
+attrs==23.1.0
 autopep8==2.0.0
 beautifulsoup4==4.11.1
 breadability==0.1.20
