@@ -196,9 +196,9 @@ terminado
 threadpoolctl
 tic-tac-toe-api-bot
 tinycss2
-torch+cu117
-torchaudio+cu117
-torchvision+cu117
+torch
+torchaudio
+torchvision
 tornado
 tqdm
 traitlets
