@@ -542,8 +542,6 @@ def ussearch():
             txt = txt.replace('%', '')
             useStuffHead.append("Acceptance Rate")
             useStuff.append(f'The acceptance rate for {uni} is {txt}%')
-        useStuffHead.append("Acceptance Rate")
-        useStuff.append(soup)
             
 
 
