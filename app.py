@@ -520,12 +520,8 @@ def ussearch():
 
 
     if all['acceptance rate']:
-        url = 'https://www.bing.com/search?q=' + uni + '+university+us+acceptance+rate' + '&count=10'
-        headers = {
-            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.5023.114 Safari/537.36",
-        }
-        request_result = requests.get(url, headers=headers)
-        soup = bs4.BeautifulSoup(request_result.text, "html.parser")
+    
+        txt, focus = ScrapGoogle(uni, '+university+us+acceptance+rate')
         # if not focus:
         #     txt = txt.split('All results')[-1]
         #     for txt_index, item in enumerate(txt):
@@ -548,7 +544,7 @@ def ussearch():
         #     useStuffHead.append("Acceptance Rate")
         #     useStuff.append(f'The acceptance rate for {uni} is {txt}%')
         useStuffHead.append("Acceptance Rate")
-        useStuff.append(soup)
+        useStuff.append(txt)
             
 
 
