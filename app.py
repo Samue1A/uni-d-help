@@ -520,27 +520,29 @@ def ussearch():
 
     if all['acceptance rate']:
         txt, focus = ScrapGoogle(uni, '+university+us+acceptance+rate')
-        if not focus:
-            txt = txt.split('All results')[-1]
-            for txt_index, item in enumerate(txt):
-                    # a.remove('%')
-                    # for num in a.split(' '):
-                    #     if isfloat(num):
-                    #         useStuffHead.append("Acceptance Rate")
-                    #         useStuff.append(f'The acceptance rate for {uni} is {num}%')
-                if item == '%':
-                    for ind in range(5):
-                        slice = txt[(txt_index-5+ind):(txt_index)]
-                        if isnum(slice):
-                            slice = slice.replace('-', '')
-                            useStuffHead.append("Acceptance Rate")
-                            useStuff.append(f'The acceptance rate for {uni} is {slice}%')
-                            break
-                    break
-        else:
-            txt = txt.replace('%', '')
-            useStuffHead.append("Acceptance Rate")
-            useStuff.append(f'The acceptance rate for {uni} is {txt}%')
+        # if not focus:
+        #     txt = txt.split('All results')[-1]
+        #     for txt_index, item in enumerate(txt):
+        #             # a.remove('%')
+        #             # for num in a.split(' '):
+        #             #     if isfloat(num):
+        #             #         useStuffHead.append("Acceptance Rate")
+        #             #         useStuff.append(f'The acceptance rate for {uni} is {num}%')
+        #         if item == '%':
+        #             for ind in range(5):
+        #                 slice = txt[(txt_index-5+ind):(txt_index)]
+        #                 if isnum(slice):
+        #                     slice = slice.replace('-', '')
+        #                     useStuffHead.append("Acceptance Rate")
+        #                     useStuff.append(f'The acceptance rate for {uni} is {slice}%')
+        #                     break
+        #             break
+        # else:
+        #     txt = txt.replace('%', '')
+        #     useStuffHead.append("Acceptance Rate")
+        #     useStuff.append(f'The acceptance rate for {uni} is {txt}%')
+        useStuffHead.append("Acceptance Rate")
+        useStuff.append(txt)
             
 
 
