@@ -553,7 +553,7 @@ def ussearch():
         l=0
         deadline, focus = ScrapGoogle(uni, '+university+us+application+deadline+date', 2)
         if not focus:
-            deadline = deadline.split('All results')[-1].split('Verbatim')[-1].replace('- ', '.').replace('›', '.').split('.')
+            deadline = deadline.split('All results')[-1].split('Verbatim')[-1].split('See more results')[-1].replace('- ', '.').replace('›', '.').split('.')
             for sentence in deadline:
                 for word in sentence.split(' '):
                     if isnum(word) and int(word.replace(',', '')) < 32:
