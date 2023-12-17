@@ -134,14 +134,22 @@ def GetText(link, look_at, SENTENCES_COUNT, country, university):
     summarizer.stop_words = get_stop_words(LANGUAGE)
     final = []
     if look_at == 'needed+grades':
-        a = ScrapGoogle(university, f'+{country}+university+average+gpa')
-        a = a.split('All results')[-1]
-        a = (a.split('. ')[0].strip() + '.').split(' ')
-        for index, item in enumerate(a):
+        if university.lower() == 'imperial college':
+            txt, focus = ScrapGoogle('imperial', '+college+average+gpa')
+        else:
+            txt, focus = ScrapGoogle(university, f'+{country}+university+average+gpa')
+        print(txt, focus)
+        if not focus:
+            txt = txt.split('All results')[-1]
+            txt = (txt.split('. ')[0].strip() + '.')
+        txt = txt.split(' ')
+        for index, item in enumerate(txt):
             if isfloat(item.strip(".")):
-                a[index] += f' (or {round(float(item.strip("."))*5, 2)}/20 in france)'
-                a = ' '.join(a)      
-                final.append(str(a))
+                txt[index] += f' (or {round(float(item.strip("."))*5, 2)}/20 in france)'
+                if len(txt) == 1:
+                    txt = [f'The average GPA for {university} is '] + txt
+                txt = ' '.join(txt)      
+                final.append(str(txt))
                 break
 
     if summarizer(parser.document, SENTENCES_COUNT):
@@ -156,12 +164,20 @@ def GetText(link, look_at, SENTENCES_COUNT, country, university):
 
 
 def ScrapGoogle(university, message, num=1):
-    url = 'https://www.google.com/search?q=' + university + message
-    headers = {"User-Agent": "Mozilla/5.0"}
-    cookies = {"CONSENT": "YES+cb.2023110-07-p0.en+FX+410"}
-    request_result = requests.get(url, headers=headers, cookies=cookies)
+    url = 'https://www.bing.com/search?q=' + university + message + '&count=10'
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.5023.114 Safari/537.36",
+    }
+    request_result = requests.get(url, headers=headers)
     soup = bs4.BeautifulSoup(request_result.text, "html.parser")
-    return soup.text
+    focus = soup.find(class_='b_focusTextLarge')
+    if focus:
+        return focus.text, True
+    focus = soup.find(class_='b_focusTextMedium')
+    if focus:
+        return focus.text, True
+
+    return soup.text, False
 
 
 def tag_visible(element):
@@ -178,23 +194,21 @@ def bold(element):
         return False
     return True
 
-def opendayuk(uni):
-    url = 'https://www.google.com/search?q=' + uni + '+uk+open+day+'
-    headers = {"User-Agent": "Mozilla/5.0"}
-    cookies = {"CONSENT": "YES+cb.20231031-07-p0.en+FX+410"}
-    request_result = requests.get(url, headers=headers, cookies=cookies)
-    soup = bs4.BeautifulSoup(request_result.text, "html.parser")
-    soup = soup.find('div', {'class': 'taw'}).contents[-1].strip()
-    texts = soup.findAll(text=True)
-    visible_texts = filter(bold, texts)  
-    return u" ".join(t.strip() for t in visible_texts)
+# def opendayuk(uni):
+#     url = 'https://www.bing.com/search?q=' + uni + '+uk+open+day+' + '&count=10'
+#     headers = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.5023.114 Safari/537.36",}
+#     request_result = requests.get(url, headers=headers)
+#     soup = bs4.BeautifulSoup(request_result.text, "html.parser")
+#     soup = soup.find('div', {'class': 'taw'}).contents[-1].strip()
+#     texts = soup.findAll(text=True)
+#     visible_texts = filter(bold, texts)  
+#     return u" ".join(t.strip() for t in visible_texts)
 
 
 
 LANGUAGE = "english"
 
 def ReturnFirstURLs(university, degree, item, country='us'):
-    print()
     URLs = []
     url = university + '+' + country + '+' + degree + '+' + item #'https://www.google.com/search?q=' + university + '+' + country + '+' + degree + '+' + item
     # headers = {"User-Agent": "Mozilla/5.0"}
@@ -212,23 +226,16 @@ def ReturnFirstURLs(university, degree, item, country='us'):
     # for href in heading_object:
     #     URLs.append(href.get('href').split("/url?q=")[-1].split("&")[0])
 
-    print(URLs)
     return URLs
 
 def filterLink(links, country='us'):
-    print(links)
-    print(0)
     for item in links:
-        print(1)
         if 'http' in item:
             if country.lower() == 'us':
                 if '.edu' in item and (not 'default/files/styles/' in item) and (not '.png' in item):
-                    print(f'all ok filter ')
                     return item
             else:
-                print(2)
                 if '.ac.uk' in item and (not 'default/files/styles/' in item) and (not '.png' in item) and (not 'images' in item.lower()):
-                    print(f'all ok filter ')
                     return item
 
 
@@ -238,7 +245,6 @@ def DoForEach(university, degree, SENTENCES_COUNT, list=['needed grades', 'under
         if ' ' in item:
             item = '+'.join(item.split(' '))
         if country == 'UK':
-            print('in uk')
             l = GetText(filterLink(ReturnFirstURLs(university, degree, item, country), country), item, SENTENCES_COUNT, country, university)
             if l:
                 returnn.append(l)
@@ -322,11 +328,8 @@ def uksearch():
             all[item] = True
 
     all_text = DoForEach(uni, degree, SENTENCES_COUNT, listy, 'UK')
-    print(all_text)
-    print('bob')
     if all_text[0] == all_text[-1]:
         all_text = all_text[0]
-        print('1st')
     
 
     links = []
@@ -340,24 +343,28 @@ def uksearch():
         links.append(item[-1])
     
     if all['acceptance rate']:
-        a = ScrapGoogle(uni, '+uk+university+acceptance+rate').split('All results')[-1]
-        a = a.split('MIT admissions is extremely selective with an acceptance rate of 7% . Students that get into MIT have an average SAT score between 1510-1580 or an average ACT score of 34-36. Massachusetts Institute of Technology Admissions - Niche www.niche.com › ')[-1]
-        for a_index, item in enumerate(a):
-                # a.remove('%')
-                # for num in a.split(' '):
-                #     if isfloat(num):
-                #         useStuffHead.append("Acceptance Rate")
-                #         useStuff.append(f'The acceptance rate for {uni} is {num}%')
-            if item == '%':
-                for ind in range(5):
-                    slice = a[(a_index-5+ind):(a_index)]
-                    print(slice)
-                    if isnum(slice):
-                        slice = slice.replace('-', '')
-                        useStuffHead.append("Acceptance Rate")
-                        useStuff.append(f'The acceptance rate for {uni} is {slice}%')
-                        break
-                break
+        txt, focus = ScrapGoogle(uni, '+uk+university+acceptance+rate')
+        if not focus:
+            txt = txt.split('All results')[-1]
+            for txt_index, item in enumerate(txt):
+                    # a.remove('%')
+                    # for num in a.split(' '):
+                    #     if isfloat(num):
+                    #         useStuffHead.append("Acceptance Rate")
+                    #         useStuff.append(f'The acceptance rate for {uni} is {num}%')
+                if item == '%':
+                    for ind in range(5):
+                        slice = txt[(txt_index-5+ind):(txt_index)]
+                        if isnum(slice):
+                            slice = slice.replace('-', '')
+                            useStuffHead.append("Acceptance Rate")
+                            useStuff.append(f'The acceptance rate for {uni} is {slice}%')
+                            break
+                    break
+        else:
+            txt = txt.replace('%', '')
+            useStuffHead.append("Acceptance Rate")
+            useStuff.append(f'The acceptance rate for {uni} is {txt}%')
 
 
     if all['courses']:
@@ -365,50 +372,70 @@ def uksearch():
         useStuffHead.append("Courses")
         useStuff.append(courses)
     if all['deadline']:
-        try:
+        deadline, focus = ScrapGoogle(uni, '+uk+university+application+deadline+date', 2)
+        if not focus:    
             try:
-                deadline = ScrapGoogle(uni, '+uk+university+application+deadline+date', 2).split('\n\n')[1]
-                deadline = adFilter(check(deadline.replace('. ', ' .').replace('?', ' .').replace('›', ' .').replace('...', ' .').split(' .')).strip()).replace('\n', ' ') 
+                try:
+                    deadline = deadline.split('\n\n')[1]
+                    deadline = adFilter(check(deadline.replace('. ', ' .').replace('?', ' .').replace('›', ' .').replace('...', ' .').split(' .')).strip()).replace('\n', ' ') 
+                except:
+                    deadline = deadline.split('Verbatim')[1]
+                    deadline = adFilter(check(deadline.replace('. ', ' .').replace('?', ' .').replace('›', ' .').replace('...', ' .').split(' .')).strip()).replace('\n', ' ') 
+                if deadline[-1] != '.':
+                    deadline += '.'
+                useStuffHead.append('Deadline')
+                useStuff.append(deadline)
             except:
-                deadline = ScrapGoogle(uni, '+uk+university+application+deadline+date', 2).split('Verbatim')[1]
-                deadline = adFilter(check(deadline.replace('. ', ' .').replace('?', ' .').replace('›', ' .').replace('...', ' .').split(' .')).strip()).replace('\n', ' ') 
-            if deadline[-1] != '.':
-                deadline += '.'
+                pass
+        else:
             useStuffHead.append('Deadline')
-            useStuff.append(deadline)
-        except:
-            pass
+            useStuff.append(deadline)            
     if all['location']:
-        z = ScrapGoogle(uni, '+uk+university+location').split('All results')[-1].split('- Wikipedia')[0].split('See results')[0].replace('›', '.').replace('|', '.').replace('/', '').replace('\\', '').split('.')
-        for senty in z:   
-            nearYou = PyYelp(senty.strip())
+        z, focus = ScrapGoogle(uni, '+university+uk+location')
+        if not focus:
+            z = z.split('All results')[-1].split('- Wikipedia')[0].split('See results')[0].replace('›', '.').replace('|', '.').replace('/', '').replace('\\', '').split('.')
+            for senty in z:   
+                nearYou = PyYelp(senty.strip())
+                if nearYou:
+                    useStuffHead.append("Near You")
+                    useStuff.append(nearYou)
+                    useStuffHead.append("Location")
+                    useStuff.append(senty)
+                    break
+        else:
+            nearYou = PyYelp(z)
             if nearYou:
                 useStuffHead.append("Near You")
                 useStuff.append(nearYou)
                 useStuffHead.append("Location")
-                useStuff.append(senty)
-                break
-    l = 0
+                useStuff.append(z)
+
     if all['openday']:
-        openday = ScrapGoogle(uni, '+uk+university+open+day').replace(' - ', '. ').split('. ')
-        print(openday)
-        for sentence in openday:
-            for word in sentence.split(' '):
-                if isnum(word) and int(word.replace(',', '')) < 32:
+        openday, focus = ScrapGoogle(uni, '+university+uk+open+day')
+        if not focus:
+            openday = openday.replace(' - ', '. ').replace(' · ', '. ').replace('…', '. ').replace('|', '. ').split('. ')
+            for sentence in openday:
+                month = False
+                day = False
+                for word in sentence.split(' '):
+                    if isnum(word) and int(word.replace(',', '')) < 32:
+                        day = True
+                    if word.lower() in ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december']:
+                        month = True
+                
+                if month and day:
                     useStuffHead.append("Open Day")
                     useStuff.append(sentence.split('All results')[-1])
-                    l = 1
                     break
-            if l ==1:
-                break
+        else:
+            useStuffHead.append("Open Day")
+            useStuff.append(openday)            
 
     if all['sources']:
         useStuffHead.append("Sources")
         useStuff.append(links)
     
-    print(useStuff)
-    print('----------------------------')
-    print(useStuffHead)
+
 
     return render_template('greet.html', text=text, headers=headers, country='UK', uni=uni, useStuff=useStuff, useStuffHead=useStuffHead)
 
@@ -479,13 +506,8 @@ def ussearch():
     text = []
     useStuffHead = []
     useStuff = []
-    print(all_text)
     for item in all_text:
         if item and not isnum(item):
-            print(item)
-            print(f'item 1: {item[0]}')
-            print(f'item 2: {item[1]}')
-            print(f'item 3: {item[-1]}')
             headers.append(item[1].replace("+", " ").capitalize())
 
             text.append(item[0])
@@ -497,24 +519,29 @@ def ussearch():
 
 
     if all['acceptance rate']:
-        a = ScrapGoogle(uni, '+university+acceptance+rate').split('All results')[-1]
-        print(a)
-        for a_index, item in enumerate(a):
-                # a.remove('%')
-                # for num in a.split(' '):
-                #     if isfloat(num):
-                #         useStuffHead.append("Acceptance Rate")
-                #         useStuff.append(f'The acceptance rate for {uni} is {num}%')
-            if item == '%':
-                for ind in range(5):
-                    slice = (a[(a_index-5+ind):(a_index)])
-                    print(slice)
-                    if isnum(slice):
-                        slice = slice.replace('-', '')
-                        useStuffHead.append("Acceptance Rate")
-                        useStuff.append(f'The acceptance rate for {uni} is {slice}%')
-                        break
-                break
+        txt, focus = ScrapGoogle(uni, '+university+us+acceptance+rate')
+        if not focus:
+            txt = txt.split('All results')[-1]
+            for txt_index, item in enumerate(txt):
+                    # a.remove('%')
+                    # for num in a.split(' '):
+                    #     if isfloat(num):
+                    #         useStuffHead.append("Acceptance Rate")
+                    #         useStuff.append(f'The acceptance rate for {uni} is {num}%')
+                if item == '%':
+                    for ind in range(5):
+                        slice = txt[(txt_index-5+ind):(txt_index)]
+                        if isnum(slice):
+                            slice = slice.replace('-', '')
+                            useStuffHead.append("Acceptance Rate")
+                            useStuff.append(f'The acceptance rate for {uni} is {slice}%')
+                            break
+                    break
+        else:
+            txt = txt.replace('%', '')
+            useStuffHead.append("Acceptance Rate")
+            useStuff.append(f'The acceptance rate for {uni} is {txt}%')
+            
 
 
     if all['major']:
@@ -523,29 +550,43 @@ def ussearch():
         useStuff.append(majors)
     if all['deadline']:
         l=0
-        deadline = ScrapGoogle(uni, '+university+application+deadline+date', 2).split('All results')[-1].split('Verbatim')[-1].replace('- ', '.').replace('›', '.').split('.')
-        for sentence in deadline:
-            for word in sentence.split(' '):
-                if isnum(word) and int(word.replace(',', '')) < 32:
-                    useStuffHead.append("Deadline")
-                    useStuff.append(sentence)
-                    l = 1
+        deadline, focus = ScrapGoogle(uni, '+university+us+application+deadline+date', 2)
+        if not focus:
+            deadline = deadline.split('All results')[-1].split('Verbatim')[-1].replace('- ', '.').replace('›', '.').split('.')
+            for sentence in deadline:
+                for word in sentence.split(' '):
+                    if isnum(word) and int(word.replace(',', '')) < 32:
+                        useStuffHead.append("Deadline")
+                        useStuff.append(sentence)
+                        l = 1
+                        break
+                if l ==1:
                     break
-            if l ==1:
-                break
-        
+        else:
+            useStuffHead.append("Deadline")
+            useStuff.append(deadline)  
+
     if all['location']:
-        z = ScrapGoogle(uni, '+university+location').split('All results')[-1].split('- Wikipedia')[0].split('See results')[0].replace('›', '.').replace('|', '.').replace('/', '').replace('\\', '').split('.')
-        for senty in z:   
-            nearYou = PyYelp(senty.strip())
+        z, focus = ScrapGoogle(uni, '+university+us+location')
+        if not focus:
+            z = z.split('All results')[-1].split('- Wikipedia')[0].split('See results')[0].replace('›', '.').replace('|', '.').replace('/', '').replace('\\', '').split('.')
+            for senty in z:   
+                nearYou = PyYelp(senty.strip())
+                if nearYou:
+                    useStuffHead.append("Near You")
+                    useStuff.append(nearYou)
+                    useStuffHead.append("Location")
+                    useStuff.append(senty)
+                    break
+        else:
+            nearYou = PyYelp(z)
             if nearYou:
                 useStuffHead.append("Near You")
                 useStuff.append(nearYou)
                 useStuffHead.append("Location")
-                useStuff.append(senty)
+                useStuff.append(z)
 
 
-                break
     if all['sources']:
         useStuffHead.append("Sources")
         useStuff.append(links)
