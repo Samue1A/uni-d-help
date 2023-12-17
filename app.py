@@ -343,7 +343,6 @@ def uksearch():
         links.append(item[-1])
     
     if all['acceptance rate']:
-        
         txt, focus = ScrapGoogle(uni, '+uk+university+acceptance+rate')
         if not focus:
             txt = txt.split('All results')[-1]
@@ -520,7 +519,6 @@ def ussearch():
 
 
     if all['acceptance rate']:
-    
         txt, focus = ScrapGoogle(uni, '+university+us+acceptance+rate')
         # if not focus:
         #     txt = txt.split('All results')[-1]
