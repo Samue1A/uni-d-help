@@ -171,8 +171,6 @@ def ScrapGoogle(university, message, num=1):
     soup = bs4.BeautifulSoup(request_result.text, "html.parser")
     focus = soup.find(class_='b_focusTextLarge') or soup.find(class_='b_focusTextMedium')
     if message == '+university+uk+location':
-        print(soup)
-        
         print(url, '\n')
     if focus:
         return focus.text, True
