@@ -344,7 +344,7 @@ def uksearch():
     
     if all['acceptance rate']:
         
-        txt, focus = ScrapGoogle(uni, '+uk+university+acceptance+rate')
+        txt, focus = ScrapGoogle(uni, '+uk+acceptance+rate')
         if not focus:
             txt = txt.split('All results')[-1]
             for txt_index, item in enumerate(txt):
