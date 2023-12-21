@@ -138,7 +138,6 @@ def GetText(link, look_at, SENTENCES_COUNT, country, university):
             txt, focus = ScrapGoogle('imperial', '+college+average+gpa')
         else:
             txt, focus = ScrapGoogle(university, f'+{country}+university+average+gpa')
-        print(txt, focus)
         if not focus:
             txt = txt.split('All results')[-1]
             txt = (txt.split('. ')[0].strip() + '.')
@@ -172,6 +171,7 @@ def ScrapGoogle(university, message, num=1):
     soup = bs4.BeautifulSoup(request_result.text, "html.parser")
     focus = soup.find(class_='b_focusTextLarge')
     if message == '+university+uk+location':
+        print(soup)
         print(url, '\n')
     if focus:
         return focus.text, True
