@@ -169,7 +169,10 @@ def ScrapGoogle(university, message, num=1):
     }
     request_result = requests.get(url, headers=headers)
     soup = bs4.BeautifulSoup(request_result.text, "html.parser")
-    focus = soup.find(class_='b_address') or soup.find(class_='b_focusTextLarge') or soup.find(class_='b_focusTextMedium')
+    print(message)
+    if message.split('+')[-1] == 'location':
+        print(soup)
+    focus = soup.find(class_='b_address') or soup.find(class_='b_focusTextLarge') or soup.find(class_='b_focusTextMedium') or soup.find(class_='b_topTitle')
     if message == '+university+uk+location':
         print(url, focus)
     if focus:
@@ -452,7 +455,7 @@ def admin():
         x = 0
         username = request.form.get("username")
         password = request.form.get("password")
-        if (username == 'samuel' and password == 'verycomplexpassword') or (username == 'oskar' and password == 'password'):
+        if (username == 'samuel' and password == 'c') or (username == 'oskar' and password == 'password'):
             with open("comments.csv", "r") as file:
                 reader = csv.reader(file)
                 for row in reader:
