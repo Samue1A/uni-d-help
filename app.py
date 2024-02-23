@@ -153,7 +153,7 @@ def GetText(link, look_at, SENTENCES_COUNT, country, university):
 
     if summarizer(parser.document, SENTENCES_COUNT):
         for sentence in summarizer(parser.document, SENTENCES_COUNT):
-            final.append(sentence)
+            final.append(str(sentence))
         final = list(dict.fromkeys(final))
         final = list(final)
         return final, look_at, url
@@ -420,7 +420,7 @@ def uksearch():
                 month = False
                 day = False
                 for word in sentence.split(' '):
-                    if isnum(word) and int(word.replace(',', '')) < 32:
+                    if isnum(word) and float(word.replace(',', '')) < 32:
                         day = True
                     if word.lower() in ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december']:
                         month = True
